@@ -152,3 +152,10 @@ pub fn find_min_height_trees_impl<A: IntoIterator<Item=[i32; 2]>>(edges: A, debu
 pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
     find_min_height_trees_impl(edges.iter().map(|x| x.as_slice()).flat_map(<&[i32; 2]>::try_from).cloned(), false)
 }
+
+
+pub fn min_cost_to_move_chips(position: Vec<i32>) -> i32 {
+    let mut counts = [0, 0];
+    position.into_iter().for_each(|x| counts[(x % 2) as usize] += 1);
+    counts[0].min(counts[1])
+}
