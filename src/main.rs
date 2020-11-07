@@ -4,7 +4,10 @@ mod lol;
 mod leetcode;
 
 use leetcode::bw38::*;
-use crate::leetcode::week::november1::{max_power, find_min_height_trees, find_min_height_trees_impl};
+use crate::leetcode::week::november1::{max_power};
+use crate::leetcode::week::november1h::{find_min_height_trees, find_min_height_trees_impl};
+use crate::leetcode::meds::{med2, med_chk};
+use crate::leetcode::random::largest_divisible_subset;
 
 // fn main() {
 // //    let nums = vec![0, 0];
@@ -25,5 +28,5 @@ fn kek(x: &mut i32) {
 }
 
 fn main() {
-    println!("{:?}", find_min_height_trees_impl( vec![[0,1],[0,2],[2,3],[2,4],[2,5],[4,6],[0,7],[4,8],[5,9],[7,10],[6,11],[0,12],[0,13],[3,14]], true));
+    println!("{:?}", largest_divisible_subset(vec![4, 8, 10, 240, 9, 27, 81, 810]))
 }
