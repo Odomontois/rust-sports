@@ -1,13 +1,9 @@
 use std::rc::Rc;
 
+use crate::leetcode::random::largest_divisible_subset;
+
 mod lol;
 mod leetcode;
-
-use leetcode::bw38::*;
-use crate::leetcode::week::november1::{max_power};
-use crate::leetcode::week::november1h::{find_min_height_trees, find_min_height_trees_impl};
-use crate::leetcode::meds::{med2, med_chk};
-use crate::leetcode::random::largest_divisible_subset;
 
 // fn main() {
 // //    let nums = vec![0, 0];
