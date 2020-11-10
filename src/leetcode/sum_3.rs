@@ -1,6 +1,7 @@
 pub struct Solution;
 
 impl Solution {
+    #[allow(dead_code)]
     pub fn three_sum(nums: Vec<i32>) -> Vec<Vec<i32>> {
         let mut res: Vec<Vec<i32>> = nums.iter().cloned().enumerate().flat_map(|(i, a)| {
             (&nums[i + 1..]).iter().cloned().enumerate().map(move |(j, b)| (i + j + 1, a, b))

@@ -5,3 +5,4 @@ pub mod challenge;
 pub mod interview;
 pub mod meds;
 pub mod random;
+pub mod haystack;

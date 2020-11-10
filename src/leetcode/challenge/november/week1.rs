@@ -1,6 +1,4 @@
-use std::iter::FromIterator;
-
-
+#[allow(dead_code)]
 pub fn max_power(s: String) -> i32 {
     s.chars().scan((1i32, '\0'), |(count, prev), c| {
         if *prev == c { *count += 1 } else { *count = 1 }
@@ -9,7 +7,7 @@ pub fn max_power(s: String) -> i32 {
     }).max().unwrap_or(0)
 }
 
-
+#[allow(dead_code)]
 pub fn min_cost_to_move_chips(position: Vec<i32>) -> i32 {
     let mut counts = [0, 0];
     position.into_iter().for_each(|x| counts[(x % 2) as usize] += 1);
@@ -28,7 +26,7 @@ impl Search {
         }
     }
 }
-
+#[allow(dead_code)]
 pub fn smallest_divisor(nums: Vec<i32>, threshold: i32) -> i32 {
     Search { nums, threshold }.go(0, 2000_000)
 }
@@ -41,6 +39,7 @@ pub struct ListNode {
 
 impl ListNode {
     #[inline]
+    #[allow(dead_code)]
     fn new(val: i32) -> Self {
         ListNode {
             next: None,
@@ -95,6 +94,7 @@ impl Add for ListNum {
     }
 }
 
+#[allow(dead_code)]
 pub fn add_two_numbers(l1: IList, l2: IList) -> IList {
     (ListNum::new(l1) + ListNum::new(l2)).into_list()
 }

@@ -1,6 +1,4 @@
-use std::rc::Rc;
-
-use crate::leetcode::random::largest_divisible_subset;
+use crate::leetcode::haystack::{KMP, str_str};
 
 mod lol;
 mod leetcode;
@@ -19,10 +17,7 @@ mod leetcode;
 // }
 
 
-fn kek(x: &mut i32) {
-    *x += 1
-}
-
 fn main() {
-    println!("{:?}", largest_divisible_subset(vec![4, 8, 10, 240, 9, 27, 81, 810]))
+    println!("{:?}", KMP::build( "bba".to_string()));
+    println!("{:?}", str_str("abba".to_string(), "bba".to_string()))
 }

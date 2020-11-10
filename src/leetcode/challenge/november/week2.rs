@@ -10,6 +10,7 @@ pub struct TreeNode {
 
 impl TreeNode {
     #[inline]
+    #[allow(dead_code)]
     pub fn new(val: i32) -> Self {
         TreeNode {
             val,
@@ -21,6 +22,7 @@ impl TreeNode {
 
 type Tree = Option<Rc<RefCell<TreeNode>>>;
 
+#[allow(dead_code)]
 fn tilt_sum(root: Tree) -> (i32, i32) {
     if let Some(r) = root {
         let node = r.borrow();
@@ -30,6 +32,7 @@ fn tilt_sum(root: Tree) -> (i32, i32) {
     } else { (0, 0) }
 }
 
+#[allow(dead_code)]
 pub fn find_tilt(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
     tilt_sum(root).1
 }
@@ -53,7 +56,11 @@ impl MaxDiff {
     }
 }
 
-
+#[allow(dead_code)]
 pub fn max_ancestor_diff(root: Tree) -> i32 {
     MaxDiff::calc(root).map(|x| x.diff).unwrap_or(0)
+}
+#[allow(dead_code)]
+pub fn flip_and_invert_image(a: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+    a.into_iter().map(|v| v.into_iter().rev().map(|i| 1 - i).collect()).collect()
 }

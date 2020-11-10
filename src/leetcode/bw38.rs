@@ -1,7 +1,6 @@
-use std::collections::HashMap;
 use std::convert::TryFrom;
-use std::ops::{Mul, Add};
-
+use std::ops::{Add, Mul};
+#[allow(dead_code)]
 pub fn frequency_sort(nums: Vec<i32>) -> Vec<i32> {
     let mut freq = vec![0; 300];
     fn idx(x: &i32) -> usize { (x + 150) as usize }
@@ -12,14 +11,14 @@ pub fn frequency_sort(nums: Vec<i32>) -> Vec<i32> {
     res.sort_by_key(|x| (freq[idx(x)], -x));
     res
 }
-
+#[allow(dead_code)]
 pub fn max_width_of_vertical_area(points: Vec<Vec<i32>>) -> i32 {
     let mut xs = points.iter().map(|v| v[0]).collect::<Vec<_>>();
     xs.sort();
     xs.windows(2).flat_map(<&[i32; 2]>::try_from).map(|[x1, x2]| x2 - x1).max().unwrap_or(0)
 }
 
-
+#[allow(dead_code)]
 pub fn count_substrings(s: String, t: String) -> i32 {
     let sc = s.as_bytes();
     let tc = t.as_bytes();
@@ -57,7 +56,7 @@ impl Add for Answer {
     }
 }
 
-
+#[allow(dead_code)]
 pub fn num_ways(words: Vec<String>, target: String) -> i32 {
     let n = words[0].len();
     let m = target.len();
