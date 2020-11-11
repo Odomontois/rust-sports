@@ -43,7 +43,7 @@ impl<A: Iterator<Item=char>> Iterator for KMPIter<A> {
         Some(self.pos)
     }
 }
-
+#[allow(dead_code)]
 pub fn str_str(haystack: String, needle: String) -> i32 {
     if needle.is_empty() { return 0; }
     let n = needle.len();

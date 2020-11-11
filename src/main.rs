@@ -1,4 +1,4 @@
-use crate::leetcode::haystack::{KMP, str_str};
+use crate::leetcode::challenge::november::week2::valid_square;
 
 mod lol;
 mod leetcode;
@@ -18,6 +18,5 @@ mod leetcode;
 
 
 fn main() {
-    println!("{:?}", KMP::build( "bba".to_string()));
-    println!("{:?}", str_str("abba".to_string(), "bba".to_string()))
+    println!("{}", valid_square(vec![1, 1], vec![0, 0], vec![1, 0], vec![0, 1]))
 }
