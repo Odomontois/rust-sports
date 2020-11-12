@@ -1,3 +1,5 @@
+use crate::leetcode::challenge::november::data::Tree;
+
 #[allow(dead_code)]
 fn sprod(p: &Vec<i32>, q: &Vec<i32>, r: &Vec<i32>) -> i32 {
     (p[0] - q[0]) * (p[0] - r[0]) + (p[1] - q[1]) * (p[1] - r[1])
@@ -18,31 +20,6 @@ pub fn valid_square(p1: Vec<i32>, p2: Vec<i32>, p3: Vec<i32>, p4: Vec<i32>) -> b
 }
 
 
-use std::rc::Rc;
-use std::cell::RefCell;
-
-
-#[derive(Debug, PartialEq, Eq)]
-pub struct TreeNode {
-    pub val: i32,
-    pub left: Tree,
-    pub right: Tree,
-}
-
-impl TreeNode {
-    #[inline]
-    #[allow(dead_code)]
-    pub fn new(val: i32) -> Self {
-        TreeNode {
-            val,
-            left: None,
-            right: None,
-        }
-    }
-}
-
-type Tree = Option<Rc<RefCell<TreeNode>>>;
-
 #[allow(dead_code)]
 fn tilt_sum(root: Tree) -> (i32, i32) {
     if let Some(r) = root {
@@ -54,7 +31,7 @@ fn tilt_sum(root: Tree) -> (i32, i32) {
 }
 
 #[allow(dead_code)]
-pub fn find_tilt(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+pub fn find_tilt(root: Tree) -> i32 {
     tilt_sum(root).1
 }
 
@@ -85,4 +62,39 @@ pub fn max_ancestor_diff(root: Tree) -> i32 {
 #[allow(dead_code)]
 pub fn flip_and_invert_image(a: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     a.into_iter().map(|v| v.into_iter().rev().map(|i| 1 - i).collect()).collect()
+}
+
+use std::collections::HashMap;
+
+#[allow(dead_code)]
+pub fn permute_unique(nums: Vec<i32>) -> Vec<Vec<i32>> {
+    let mut map = HashMap::new();
+    for num in nums {
+        let count = map.remove(&num).unwrap_or(0) + 1;
+        map.insert(num, count);
+    }
+    let mut items: Vec<_> = map.into_iter().map(|(k, v)| (k as i8, v as u8)).collect();
+
+    let mut cache: Cache = HashMap::new();
+    permutes(&mut items, &mut cache)
+        .into_iter().map(|v| v.into_iter().map(|n| n as i32).collect()).collect()
+}
+
+type Cache = HashMap<Vec<(i8, u8)>, Vec<Vec<i8>>>;
+
+fn permutes(nums: &mut Vec<(i8, u8)>, cache: &mut Cache) -> Vec<Vec<i8>> {
+    if nums.iter().all(|&(_, i)| i == 0) { return vec![vec![]]; }
+    if let Some(v) = cache.get(nums) { return v.clone(); };
+    let mut res = vec![];
+    for k in 0..nums.len() {
+        if nums[k].1 == 0 { continue; }
+        nums[k].1 -= 1;
+        for mut v in permutes(nums, cache) {
+            v.push(nums[k].0);
+            res.push(v)
+        }
+        nums[k].1 += 1;
+    }
+    cache.insert(nums.clone(), res.clone());
+    res
 }

@@ -1,4 +1,6 @@
-use crate::leetcode::challenge::november::week2::valid_square;
+#![feature(array_map)]
+
+use crate::leetcode::challenge::november::week2::permute_unique;
 
 mod lol;
 mod leetcode;
@@ -18,5 +20,5 @@ mod leetcode;
 
 
 fn main() {
-    println!("{}", valid_square(vec![1, 1], vec![0, 0], vec![1, 0], vec![0, 1]))
+    println!("{:#?}", permute_unique(vec![1, 2, 3, 4, 5]))
 }

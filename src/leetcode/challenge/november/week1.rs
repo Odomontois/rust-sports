@@ -26,40 +26,26 @@ impl Search {
         }
     }
 }
+
 #[allow(dead_code)]
 pub fn smallest_divisor(nums: Vec<i32>, threshold: i32) -> i32 {
     Search { nums, threshold }.go(0, 2000_000)
 }
 
-#[derive(PartialEq, Eq, Clone, Debug)]
-pub struct ListNode {
-    pub val: i32,
-    pub next: Option<Box<ListNode>>,
-}
 
-impl ListNode {
-    #[inline]
-    #[allow(dead_code)]
-    fn new(val: i32) -> Self {
-        ListNode {
-            next: None,
-            val,
-        }
-    }
-}
-
-type IList = Option<Box<ListNode>>;
 use std::ops::Add;
-struct ListNum(IList);
+use crate::leetcode::challenge::november::data::{ListNode, List};
+
+struct ListNum(List);
 
 impl ListNum {
-    pub fn new(list: IList) -> ListNum { ListNum(Self::reverse(list)) }
-    fn unpack(list: IList) -> Option<(i32, IList)> {
+    pub fn new(list: List) -> ListNum { ListNum(Self::reverse(list)) }
+    fn unpack(list: List) -> Option<(i32, List)> {
         let bx = list?;
         let ListNode { val, next } = *bx;
         Some((val, next))
     }
-    fn reverse(mut list: IList) -> IList {
+    fn reverse(mut list: List) -> List {
         let mut res = None;
         while let Some((val, next)) = Self::unpack(list) {
             list = next;
@@ -67,7 +53,7 @@ impl ListNum {
         }
         res
     }
-    fn into_list(self) -> IList { Self::reverse(self.0) }
+    fn into_list(self) -> List { Self::reverse(self.0) }
 }
 
 impl Add for ListNum {
@@ -95,7 +81,31 @@ impl Add for ListNum {
 }
 
 #[allow(dead_code)]
-pub fn add_two_numbers(l1: IList, l2: IList) -> IList {
+pub fn add_two_numbers(l1: List, l2: List) -> List {
     (ListNum::new(l1) + ListNum::new(l2)).into_list()
+}
+
+#[inline]
+fn prepend(val: i32, next: List) -> List {
+    Some(Box::new(ListNode { val, next }))
+}
+
+#[inline]
+fn insert(val: i32, list: List) -> List {
+    if let Some(b) = list {
+        if val <= b.val { prepend(val, Some(b)) } else {
+            prepend(b.val, insert(val, b.next))
+        }
+    } else { prepend(val, None) }
+}
+
+#[allow(dead_code)]
+pub fn insertion_sort_list(mut head: List) -> List {
+    let mut result = None;
+    while let Some(b) = head {
+        result = insert(b.val, result);
+        head = b.next
+    }
+    result
 }
 
