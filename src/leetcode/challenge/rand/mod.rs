@@ -1,4 +1,5 @@
 pub mod justify;
+pub mod max_size_slices;
 
 use std::collections::HashMap;
 use Res::*;
@@ -72,5 +73,15 @@ pub fn remove_kdigits(num: String, k: i32) -> String {
     ds.sort_by_key(|&x| x.0);
     String::from_utf8(ds.into_iter().map(|x| x.1).collect()).unwrap()
 }
+
+#[allow(dead_code)]
+pub fn minimum_one_bit_operations(n: i32) -> i32 {
+    fn f(n: i32, b: usize, zero: bool) -> i32 {
+        if b == 0 { 0 } else if (n & (1 << (b - 1)) == 0) == zero { f(n, b - 1, true) } else { f(n, b - 1, false) + (1 << b - 1) }
+    }
+    f(n, 31, true)
+}
+
+
 
 

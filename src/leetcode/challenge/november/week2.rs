@@ -98,3 +98,38 @@ fn permutes(nums: &mut Vec<(i8, u8)>, cache: &mut Cache) -> Vec<Vec<i8>> {
     cache.insert(nums.clone(), res.clone());
     res
 }
+
+
+pub fn init_comb() -> Vec<Vec<u64>> {
+    (0..32).scan(vec![], |cur, _| {
+        *cur = cur.iter().scan(0, |p, i| {
+            let res = *i + *p;
+            *p = *i;
+            Some(res)
+        }).collect();
+        cur.push(1);
+        Some(cur.clone())
+    }).collect()
+}
+
+#[allow(dead_code)]
+pub fn poor_pigs(buckets: i32, minutes_to_die: i32, minutes_to_test: i32) -> i32 {
+    let ticks = minutes_to_test / minutes_to_die;
+    pig_it(ticks, &init_comb()).into_iter()
+        .enumerate().find(|(_, b)| *b >= buckets as u64)
+        .map(|(pigs, _)| pigs as i32)
+        .unwrap_or(-1)
+}
+
+pub fn pig_it(ticks: i32, comb: &Vec<Vec<u64>>) -> Vec<u64> {
+    if ticks == 1 { return (0..32).map(|i| 1 << i).collect(); };
+    let prev = pig_it(ticks - 1, comb);
+    (0..31)
+        .map(|i| prev.iter().zip(comb[i].iter())
+            .map(|(x, c)| *x * *c)
+            .sum())
+        .scan(0u64, | p, x| {let q = *p; *p = x; Some((q, x))})
+        .take_while(|(p, _x)| *p <= <i32>::max_value() as u64)
+        .map(|(_p, x)| x)
+        .collect()
+}

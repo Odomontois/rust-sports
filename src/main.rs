@@ -1,24 +1,14 @@
 #![feature(array_map)]
 
-use crate::leetcode::challenge::november::week2::permute_unique;
+use crate::leetcode::challenge::november::week2::{init_comb, pig_it, poor_pigs};
 
 mod lol;
 mod leetcode;
 
-// fn main() {
-// //    let nums = vec![0, 0];
-//     let nums = vec![-1, 0, 1, 2, -1, -4];
-//     let res = leetcode::sum_3::Solution::three_sum(nums);
-//     println!("{:?}", res);
-// }
-
-// pub enum CherryTree<T> {
-//     Empty,
-//     Leaf(Rc<T>),
-//     Branch(Option<RC<T>>, Box<CherryTree<RC<(T, T)>>>, Option<RC<T>>),
-// }
-
 
 fn main() {
-    println!("{:#?}", permute_unique(vec![1, 2, 3, 4, 5]))
+    for i in 1..5 {
+        println!("{} {:?}", i, pig_it(i, &init_comb()).into_iter().enumerate().collect::<Vec<_>>())
+    }
+    println!("{}", poor_pigs(4, 15, 15));
 }
