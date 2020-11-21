@@ -240,3 +240,38 @@ fn search_pivot_strict<A: Ord>(nums: &Vec<A>, from: usize, to: usize) -> usize {
     let mid = (to + from) / 2;
     if nums[mid] < nums[from] { search_pivot_strict(nums, from, mid) } else { search_pivot_strict(nums, mid, to) }
 }
+
+
+#[allow(dead_code)]
+pub fn at_most_n_given_digit_set(digits: Vec<String>, n: i32) -> i32 {
+    let num = format!("{}", n).chars().collect::<Vec<_>>();
+    let digs = digits.iter().flat_map(|s| s.chars()).collect::<Vec<_>>();
+    at_most(digs.as_slice(), num.as_slice()) + add(digs.len() as i32, num.len() as u32)
+}
+
+
+fn add(dl: i32, nl: u32) -> i32 {
+    match dl {
+        0 => 0,
+        1 => nl as i32 - 1,
+        _ => (dl.pow(nl) - 1) / (dl - 1) - 1
+    }
+}
+
+fn at_most(digs: &[char], num: &[char]) -> i32 {
+    match num {
+        [] => 1,
+        [f, rest @ ..] => digs.iter().map(|d| match d.cmp(f) {
+            Equal => at_most(digs, rest),
+            Less => (digs.len() as i32).pow(num.len() as u32 - 1),
+            Greater => 0
+        }).sum()
+    }
+}
+
+#[test]
+fn test_at_most() {
+    fn run<'a, A: IntoIterator<Item=&'a &'a str>>(digs: A, n: i32) -> i32 { at_most_n_given_digit_set(digs.into_iter().map(|x| x.to_string()).collect(), n) }
+    assert_eq!(run(&["1", "3", "5", "7"], 100), 20);
+    assert_eq!(run(&["7"], 8), 1);
+}
