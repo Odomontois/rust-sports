@@ -66,7 +66,7 @@ pub fn mirror_reflection(p: i32, q: i32) -> i32 {
 
 use std::ops::Rem;
 
-fn gcd<A: Rem<Output=A> + From<u8> + Ord + Clone>(a: A, b: A) -> A {
+fn gcd<A: Rem<Output = A> + From<u8> + Ord + Clone>(a: A, b: A) -> A {
     if b > a {
         return gcd(b, a);
     };
@@ -113,7 +113,7 @@ pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
 
 #[test]
 fn merge_text() {
-    fn to_vec2<V: IntoIterator<Item=[A; 2]>, A>(xs: V) -> Vec<Vec<A>> {
+    fn to_vec2<V: IntoIterator<Item = [A; 2]>, A>(xs: V) -> Vec<Vec<A>> {
         xs.into_iter().map(|[x, y]| vec![x, y]).collect()
     }
     assert_eq!(
@@ -134,11 +134,11 @@ enum Expr {
 }
 
 impl Expr {
-    fn all_chars(xs: Vec<Expr>) -> impl Iterator<Item=char> {
+    fn all_chars(xs: Vec<Expr>) -> impl Iterator<Item = char> {
         xs.into_iter().flat_map(|expr| expr.into_chars())
     }
 
-    fn into_chars(self) -> Box<dyn Iterator<Item=char>> {
+    fn into_chars(self) -> Box<dyn Iterator<Item = char>> {
         match self {
             Expr::Single(c) => Box::new(once(c)),
             Expr::Repeat { count, exprs } => Box::new(
@@ -150,7 +150,7 @@ impl Expr {
     }
 }
 
-fn parse_string(it: &mut impl Iterator<Item=char>) -> Vec<Expr> {
+fn parse_string(it: &mut impl Iterator<Item = char>) -> Vec<Expr> {
     let mut res = Vec::new();
     let mut num_state = None;
     while let Some(c) = it.next().filter(|c| *c != ']') {
@@ -176,18 +176,20 @@ fn parse_string_test() {
     println!("{:?}", parse_string(&mut "2[abc]3[cd]ef".chars()));
 }
 
-
 #[allow(dead_code)]
 pub fn search<A: Ord>(nums: Vec<A>, target: A) -> bool {
-    if nums.is_empty() { return false; }
+    if nums.is_empty() {
+        return false;
+    }
     match dbg!(search_pivot(&nums)) {
         None => target == nums[0],
         Some(None) => search_iter(&nums, &target, 0, nums.len()).is_some(),
         Some(Some(p)) => (match target.cmp(&nums[0]) {
             Less => search_iter(&nums, &target, p, nums.len()),
             Greater => search_iter(&nums, &target, 0, p),
-            Equal => Some(0)
-        }).is_some()
+            Equal => Some(0),
+        })
+        .is_some(),
     }
 }
 
@@ -202,29 +204,35 @@ fn test_search() {
 use std::cmp::Ordering::*;
 
 fn search_iter<A: Ord>(nums: &Vec<A>, target: &A, from: usize, to: usize) -> Option<usize> {
-    if to - from == 1 { return Some(from).filter(|&i| &nums[i] == target); }
+    if to - from == 1 {
+        return Some(from).filter(|&i| &nums[i] == target);
+    }
     let mid = (from + to) / 2;
     match nums[mid].cmp(target) {
         Less => search_iter(nums, target, mid, to),
         Greater => search_iter(nums, target, from, mid),
-        Equal => Some(mid)
+        Equal => Some(mid),
     }
 }
 
 fn search_pivot<A: Ord>(nums: &Vec<A>) -> Option<Option<usize>> {
-    if nums.len() <= 1 { return Some(None); }
+    if nums.len() <= 1 {
+        return Some(None);
+    }
     let last = nums.len() - 1;
     match nums[0].cmp(&nums[last]) {
         Less => Some(None),
         Greater => Some(Some(search_pivot_strict(nums, 0, last))),
-        Equal => search_pivot_nonstrict(nums, 0, last).map(|x| Some(x))
+        Equal => search_pivot_nonstrict(nums, 0, last).map(|x| Some(x)),
     }
 }
 
 // nums[from] == nums[to]
 fn search_pivot_nonstrict<A: Ord>(nums: &Vec<A>, from: usize, to: usize) -> Option<usize> {
     dbg!(from..to);
-    if to - from == 1 { return None; }
+    if to - from == 1 {
+        return None;
+    }
     let mid = (to + from) / 2;
     match nums[mid].cmp(&nums[from]) {
         Less => Some(search_pivot_strict(nums, from, mid)),
@@ -236,11 +244,16 @@ fn search_pivot_nonstrict<A: Ord>(nums: &Vec<A>, from: usize, to: usize) -> Opti
 // nums[from] > nums[to]
 fn search_pivot_strict<A: Ord>(nums: &Vec<A>, from: usize, to: usize) -> usize {
     dbg!(from..to);
-    if to - from == 1 { return to; }
+    if to - from == 1 {
+        return to;
+    }
     let mid = (to + from) / 2;
-    if nums[mid] < nums[from] { search_pivot_strict(nums, from, mid) } else { search_pivot_strict(nums, mid, to) }
+    if nums[mid] < nums[from] {
+        search_pivot_strict(nums, from, mid)
+    } else {
+        search_pivot_strict(nums, mid, to)
+    }
 }
-
 
 #[allow(dead_code)]
 pub fn at_most_n_given_digit_set(digits: Vec<String>, n: i32) -> i32 {
@@ -249,29 +262,55 @@ pub fn at_most_n_given_digit_set(digits: Vec<String>, n: i32) -> i32 {
     at_most(digs.as_slice(), num.as_slice()) + add(digs.len() as i32, num.len() as u32)
 }
 
-
 fn add(dl: i32, nl: u32) -> i32 {
     match dl {
         0 => 0,
         1 => nl as i32 - 1,
-        _ => (dl.pow(nl) - 1) / (dl - 1) - 1
+        _ => (dl.pow(nl) - 1) / (dl - 1) - 1,
     }
 }
 
 fn at_most(digs: &[char], num: &[char]) -> i32 {
     match num {
         [] => 1,
-        [f, rest @ ..] => digs.iter().map(|d| match d.cmp(f) {
-            Equal => at_most(digs, rest),
-            Less => (digs.len() as i32).pow(num.len() as u32 - 1),
-            Greater => 0
-        }).sum()
+        [f, rest @ ..] => digs
+            .iter()
+            .map(|d| match d.cmp(f) {
+                Equal => at_most(digs, rest),
+                Less => (digs.len() as i32).pow(num.len() as u32 - 1),
+                Greater => 0,
+            })
+            .sum(),
     }
 }
 
 #[test]
 fn test_at_most() {
-    fn run<'a, A: IntoIterator<Item=&'a &'a str>>(digs: A, n: i32) -> i32 { at_most_n_given_digit_set(digs.into_iter().map(|x| x.to_string()).collect(), n) }
+    fn run<'a, A: IntoIterator<Item = &'a &'a str>>(digs: A, n: i32) -> i32 {
+        at_most_n_given_digit_set(digs.into_iter().map(|x| x.to_string()).collect(), n)
+    }
     assert_eq!(run(&["1", "3", "5", "7"], 100), 20);
     assert_eq!(run(&["7"], 8), 1);
+}
+
+static MORSE: [&str; 26] = [
+    ".-", "-...", "-.-.", "-..", ".", "..-.", "--.", "....", "..", ".---", "-.-", ".-..", "--",
+    "-.", "---", ".--.", "--.-", ".-.", "...", "-", "..-", "...-", ".--", "-..-", "-.--", "--..",
+];
+
+use std::collections::HashSet;
+
+#[allow(dead_code)]
+pub fn unique_morse_representations(words: Vec<String>) -> i32 {
+    words
+        .into_iter()
+        .map(transform)
+        .collect::<HashSet<_>>()
+        .len() as i32
+}
+
+fn transform(word: String) -> String {
+    word.chars()
+        .flat_map(|c| MORSE[c.max('a').min('z') as usize - 'a' as usize].chars())
+        .collect()
 }
