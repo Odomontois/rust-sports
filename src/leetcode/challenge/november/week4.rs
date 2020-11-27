@@ -1,4 +1,5 @@
-use std::iter::FromIterator;
+use std::collections::HashSet;
+use std::iter::{FromIterator, once};
 
 use crate::leetcode::challenge::november::data::Tree;
 
@@ -90,3 +91,71 @@ impl FromIterator<char> for Calculate {
         calc
     }
 }
+
+#[allow(dead_code)]
+pub fn smallest_repunit_div_by_k(k: i32) -> i32 {
+    let mut cur = 1 % k;
+    let mut n = 1;
+    let mut seen = HashSet::new();
+    while cur != 0 {
+        seen.insert(cur);
+        n += 1;
+        cur = (cur * 10 + 1) % k;
+        if seen.contains(&cur) { return -1; }
+    }
+    n
+}
+
+
+pub struct SolLongest;
+
+
+impl SolLongest {
+    #[allow(dead_code)]
+    pub fn longest_substring(s: String, k: i32) -> i32 {
+        let mut counts = [0; 26];
+        for c in s.chars() {
+            let u = c.min('z').max('a') as usize - 'a' as usize;
+            counts[u] += 1;
+        }
+        let min_ch = counts.iter().enumerate().filter(|&(_, &u)| u > 0 && u < k).min_by_key(|&(_, &u)| u);
+        if let Some((ci, _)) = min_ch {
+            let c = (ci as u8 + 'a' as u8) as char;
+            s.split(c).filter(|s| !s.is_empty()).map(|sub| Self::longest_substring(sub.to_string(), k)).max().unwrap_or(0)
+        } else { s.len() as i32 }
+    }
+}
+
+#[test]
+fn test_longest_substring() {
+    fn check(s: &str, i: i32, exp: i32) { assert_eq!(SolLongest::longest_substring(s.to_string(), i), exp) }
+    check("aaabb", 3, 3);
+}
+
+
+#[allow(dead_code)]
+pub fn can_partition(nums: Vec<i32>) -> bool {
+    let n: i32 = nums.iter().cloned().sum();
+    if n % 2 == 1 { return false; }
+    let mut seen = [false; 30000];
+    let mut q = vec![0];
+    for m in nums {
+        for i in q.iter().copied().map(|i| i + m as usize).filter(|&i| !seen[i]).collect::<Vec<_>>() {
+            seen[i] = true;
+            q.push(i)
+        }
+    }
+    seen[n as usize / 2]
+}
+
+#[test]
+fn can_partition_test(){
+    assert_eq!(can_partition(vec![3, 3, 3, 4, 5]), true)
+}
+
+#[allow(dead_code)]
+pub fn can_partition_1(nums: Vec<i32>) -> bool {
+    let n: i32 = nums.iter().cloned().sum();
+    n % 2 == 0 && nums.into_iter().fold(once(0).collect::<HashSet<_>>(), |s, n| s.into_iter().flat_map(|m| vec![m, m + n]).collect()).contains(&(n / 2))
+}
+
