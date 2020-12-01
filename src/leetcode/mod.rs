@@ -8,3 +8,4 @@ pub mod random;
 pub mod haystack;
 pub mod contest;
 pub mod chat;
+pub mod data;

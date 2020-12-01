@@ -34,7 +34,7 @@ pub fn smallest_divisor(nums: Vec<i32>, threshold: i32) -> i32 {
 
 
 use std::ops::Add;
-use crate::leetcode::challenge::november::data::{ListNode, List};
+use crate::leetcode::data::{ListNode, List};
 
 struct ListNum(List);
 

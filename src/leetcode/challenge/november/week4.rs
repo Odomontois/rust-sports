@@ -1,7 +1,7 @@
-use std::collections::HashSet;
+use std::collections::{HashSet, BTreeMap};
 use std::iter::{FromIterator, once};
 
-use crate::leetcode::challenge::november::data::Tree;
+use crate::leetcode::data::Tree;
 
 #[allow(dead_code)]
 pub fn rob(root: Tree) -> i32 {
@@ -149,7 +149,7 @@ pub fn can_partition(nums: Vec<i32>) -> bool {
 }
 
 #[test]
-fn can_partition_test(){
+fn can_partition_test() {
     assert_eq!(can_partition(vec![3, 3, 3, 4, 5]), true)
 }
 
@@ -159,3 +159,29 @@ pub fn can_partition_1(nums: Vec<i32>) -> bool {
     n % 2 == 0 && nums.into_iter().fold(once(0).collect::<HashSet<_>>(), |s, n| s.into_iter().flat_map(|m| vec![m, m + n]).collect()).contains(&(n / 2))
 }
 
+
+#[allow(dead_code)]
+pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
+    type Counter = BTreeMap<i32, i32>;
+    let (start, cont) = nums.split_at(k as usize - 1);
+    let mut window = BTreeMap::<i32, i32>::new();
+    let mut res = vec![];
+    fn add(w: &mut Counter, k: i32, d: i32) {
+        let cnt = w.remove(&k).unwrap_or(0) + d;
+        if cnt > 0 { w.insert(k, cnt); }
+    }
+
+    for &k in start { add(&mut window, k, 1); }
+    for (&left, &right) in nums.iter().zip(cont.iter()) {
+        add(&mut window, right, 1);
+        for &x in window.keys().rev().next() { res.push(x) }
+        add(&mut window, left, -1);
+    }
+    res
+}
+
+#[test]
+fn test_window() {
+    println!("{:?}", max_sliding_window(vec![1, 3, -1, -3, 5, 3, 6, 7], 3));
+    println!("{:?}", max_sliding_window(vec![1, -1], 1));
+}

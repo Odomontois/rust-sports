@@ -1,4 +1,4 @@
-use crate::leetcode::challenge::november::data::Tree;
+use crate::leetcode::data::Tree;
 
 #[allow(dead_code)]
 fn sprod(p: &Vec<i32>, q: &Vec<i32>, r: &Vec<i32>) -> i32 {
