@@ -1,4 +1,5 @@
 #![feature(array_map)]
+#![allow(dead_code)]
 
 mod lol;
 mod leetcode;
