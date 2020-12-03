@@ -4,6 +4,39 @@ use std::ops::{Add, Bound, RangeBounds};
 use std::convert::TryInto;
 
 
+
+#[derive(Clone, Debug)]
+struct Bin<A, M> { measures: Vec<M>, values: Vec<A>, level: usize }
+
+impl<A: Measured<M>, M: Clone + Monoid> Add for Bin<A, M> {
+    type Output = Bin<A, M>;
+    fn add(mut self, mut rhs: Self) -> Self::Output {
+        if self.level != rhs.level { return self; }
+        let capacity = (1 << (self.level + 1)) - 1;
+        let mut measures = Vec::with_capacity(capacity);
+        measures.push(self.measure() + rhs.measure());
+        self.values.append(&mut rhs.values);
+        let mut left = self.measures.into_iter();
+        let mut right = rhs.measures.into_iter();
+        for i in 0..self.level {
+            let pack_size = 1 << i;
+            measures.extend(left.by_ref().take(pack_size));
+            measures.extend(right.by_ref().take(pack_size));
+        }
+        Bin { measures, values: self.values, level: self.level + 1 }
+    }
+}
+
+impl<A: Measured<M>, M: Clone + Monoid> Measured<M> for Bin<A, M> {
+    fn measure(&self) -> M {
+        self.measures
+            .get(0).cloned()
+            .or_else(|| self.values.get(0).map(|a| a.measure()))
+            .unwrap_or_else(|| M::zero())
+    }
+}
+
+
 #[derive(Clone, Debug)]
 pub enum FullBin<A, M> {
     Empty,
