@@ -1,6 +1,6 @@
-#![feature(array_map)]
+// #![feature(array_map)]
 #![allow(dead_code)]
-#![feature(type_alias_impl_trait)]
+// #![feature(type_alias_impl_trait)]
 
 mod lol;
 mod leetcode;

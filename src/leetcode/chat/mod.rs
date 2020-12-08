@@ -37,20 +37,20 @@ impl Index<(usize, usize)> for NumMatrix {
     }
 }
 
-#[test]
-fn matr_check() {
-    let m = NumMatrix::new(vec![vec![1; 3]; 5]);
-    let mrx = [
-        [3, 0, 1, 4, 2],
-        [5, 6, 3, 2, 1],
-        [1, 2, 0, 1, 5],
-        [4, 1, 0, 1, 7],
-        [1, 0, 3, 0, 5]
-    ];
-    let nm = NumMatrix::new(mrx.map(|v| v.to_vec()).to_vec());
-    println!("{:?} {}", m, m.sum_region(1, 1, 4, 2));
-    println!("{:#?}", nm);
-    println!("{:#?}", nm.sum_region(2, 1, 4, 3));
-    println!("{:#?}", nm.sum_region(1, 1, 2, 2));
-    println!("{:#?}", nm.sum_region(1, 2, 2, 4));
-}
+// #[test]
+// fn matr_check() {
+//     let m = NumMatrix::new(vec![vec![1; 3]; 5]);
+//     let mrx = [
+//         [3, 0, 1, 4, 2],
+//         [5, 6, 3, 2, 1],
+//         [1, 2, 0, 1, 5],
+//         [4, 1, 0, 1, 7],
+//         [1, 0, 3, 0, 5]
+//     ];
+//     let nm = NumMatrix::new(mrx.map(|v| v.to_vec()).to_vec());
+//     println!("{:?} {}", m, m.sum_region(1, 1, 4, 2));
+//     println!("{:#?}", nm);
+//     println!("{:#?}", nm.sum_region(2, 1, 4, 3));
+//     println!("{:#?}", nm.sum_region(1, 1, 2, 2));
+//     println!("{:#?}", nm.sum_region(1, 2, 2, 4));
+// }
