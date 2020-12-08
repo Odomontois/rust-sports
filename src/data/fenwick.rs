@@ -2,8 +2,6 @@ use std::convert::TryInto;
 use std::iter::{FromIterator};
 use std::ops::{Add, Bound, RangeBounds, AddAssign};
 
-
-
 pub trait Monoid: Clone + Add<Self, Output=Self> + AddAssign {
     fn zero() -> Self;
 }
