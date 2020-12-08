@@ -32,7 +32,6 @@ use std::mem::swap;
 // pub type Tree = Option<Rc<RefCell<TreeNode>>>;
 
 
-
 pub fn increasing_bst(root: Tree) -> Tree {
     let mut cur = root.clone();
     while let Some(rc) = cur {
@@ -52,4 +51,80 @@ pub fn increasing_bst(root: Tree) -> Tree {
         cur = rm.right.clone();
     }
     root
+}
+
+pub fn can_place_flowers(mut flowerbed: Vec<i32>, mut n: i32) -> bool {
+    let mut p = true;
+    let mut pp = false;
+    flowerbed.push(0);
+
+    for f in flowerbed {
+        if f == 0 && p && pp {
+            n -= 1;
+            pp = false;
+        } else { pp = p; }
+        p = f == 0;
+        if n == 0 { return true; }
+    }
+    false
+}
+
+#[test]
+fn can_place_test() {
+    // assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 1], 1), true);
+    // assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 1], 2), false);
+    // assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 0, 1], 2), false);
+    assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 0, 0, 1], 2), true);
+}
+
+// #[allow(dead_code)]
+// pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
+//     fn variants(mut n: i32) -> Vec<i32> {
+//         let mut res = vec![n];
+//         if n % 2 == 0 {
+//             while n % 2 == 0 {
+//                 n %= 2;
+//                 res.push(n);
+//             }
+//         } else {
+//             while n <= 1000_000_000 {
+//                 n *= 2;
+//                 res.push(n);
+//             }
+//         }
+//         res
+//     }
+//
+//     // let mut t = <BTreeMap<i32, i32>>::new();
+//
+//     unimplemented!()
+// }
+
+pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
+    let ns = n as usize;
+    let mut v = vec![vec![0i32; ns]; ns];
+    if ns % 2 == 1 { v[ns / 2][ns / 2] = n * n }
+    for i in 0..ns / 2 {
+        for k in i..(ns - i - 1) {
+            for (q, &(a, b)) in (&[(i, k), (k, ns - i - 1), (ns - i - 1, ns - k - 1), (ns - k - 1, i)]).into_iter().enumerate() {
+                v[a][b] = ((ns - i) * 4 * i + 1 + k - i + q * (ns - 2 * i - 1)) as i32;
+            }
+        }
+    }
+    v
+}
+
+#[test]
+fn test_generate_matrix() {
+    println!("{:?}", generate_matrix(0));
+    println!("{:?}", generate_matrix(1));
+    println!("{:?}", generate_matrix(2));
+    println!("{:?}", generate_matrix(3));
+    println!("{:?}", generate_matrix(4));
+    println!("{:?}", generate_matrix(5));
+}
+
+#[derive(Eq, Ord, PartialOrd, PartialEq)]
+enum TreeSymbol<A>{
+    Begin, End, Val(A)
 }

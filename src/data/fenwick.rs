@@ -3,7 +3,10 @@ use std::mem::swap;
 use std::ops::{Add, Bound, RangeBounds};
 use std::convert::TryInto;
 
-
+trait RangeCalc {
+    type Output;
+    fn range_calc(&self, from: usize, to: usize) -> Self::Output;
+}
 
 #[derive(Clone, Debug)]
 struct Bin<A, M> { measures: Vec<M>, values: Vec<A>, level: usize }
@@ -33,6 +36,27 @@ impl<A: Measured<M>, M: Clone + Monoid> Measured<M> for Bin<A, M> {
             .get(0).cloned()
             .or_else(|| self.values.get(0).map(|a| a.measure()))
             .unwrap_or_else(|| M::zero())
+    }
+}
+
+impl<A: Measured<M>, M: Clone + Monoid> Bin<A, M> {
+    fn range_iter(&self, cur: usize, start: usize, end: usize, from: usize, to: usize) -> M {
+        if start >= from && end <= to {
+            return if end - start <= 1 { self.values[start].measure() } else { self.measures[cur].clone() };
+        }
+        if start >= to && end <= from { return M::zero(); }
+        let mid = (start + end) / 2;
+        let l = self.range_iter(cur * 2 + 1, start, mid, from, to);
+        let r = self.range_iter(cur * 2 + 2, mid, end, from, to);
+        l + r
+    }
+}
+
+impl<A: Measured<M>, M: Clone + Monoid> RangeCalc for Bin<A, M> {
+    type Output = M;
+
+    fn range_calc(&self, from: usize, to: usize) -> Self::Output {
+        self.range_iter(0, 0, 1 << self.level, from, to)
     }
 }
 

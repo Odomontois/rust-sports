@@ -1,6 +1,7 @@
 use crate::leetcode::data::Tree;
 
 mod week1;
+mod week2;
 
 #[allow(dead_code)]
 pub fn max_depth(root: Tree) -> i32 {
