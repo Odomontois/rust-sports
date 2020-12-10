@@ -77,28 +77,6 @@ fn can_place_test() {
     assert_eq!(can_place_flowers(vec![1, 0, 0, 0, 0, 0, 1], 2), true);
 }
 
-// #[allow(dead_code)]
-// pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
-//     fn variants(mut n: i32) -> Vec<i32> {
-//         let mut res = vec![n];
-//         if n % 2 == 0 {
-//             while n % 2 == 0 {
-//                 n %= 2;
-//                 res.push(n);
-//             }
-//         } else {
-//             while n <= 1000_000_000 {
-//                 n *= 2;
-//                 res.push(n);
-//             }
-//         }
-//         res
-//     }
-//
-//     // let mut t = <BTreeMap<i32, i32>>::new();
-//
-//     unimplemented!()
-// }
 
 pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
     let ns = n as usize;
