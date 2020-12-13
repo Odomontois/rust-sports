@@ -1,5 +1,6 @@
 use std::cell::RefCell;
 use std::cmp::Ordering;
+use std::collections::HashMap;
 use std::rc::Rc;
 
 use StackItem::*;
@@ -85,5 +86,47 @@ pub fn look_subtree(root: Tree) -> (Tree, usize) {
         Ordering::Less => (r, rs + 1),
         Ordering::Equal => (root, rs + 1),
         Ordering::Greater => (l, ls + 1)
+    }
+}
+
+pub fn max_coins(nums: Vec<i32>) -> i32 {
+    let mut calc = CoinCalc::new(&nums);
+    let res = calc.calc(CoinKey { from: 0, to: nums.len() as u16, left: 1, right: 1 });
+    // for i in calc.cache.iter() { println!("{:?}", &i) };
+    res
+}
+
+#[test]
+fn test_max_coins() {
+    println!("{}", max_coins(vec![3, 1, 5, 8]));
+}
+
+#[derive(Debug, Eq, PartialEq, Hash, Clone, Copy)]
+struct CoinKey { from: u16, to: u16, left: u8, right: u8 }
+
+#[derive(Debug)]
+struct CoinCalc { cache: HashMap<CoinKey, i32>, nums: Vec<u8> }
+
+impl CoinCalc {
+    fn new(nums: &Vec<i32>) -> Self {
+        CoinCalc { cache: HashMap::new(), nums: nums.iter().map(|&x| x as u8).collect() }
+    }
+
+    fn calc(&mut self, key: CoinKey) -> i32 {
+        let CoinKey { from, to, left, right } = key;
+        if from == to { return 0; } else if from + 1 == to {
+            return self.nums[from as usize] as i32 * left as i32 * right as i32;
+        }
+        if let Some(&v) = self.cache.get(&key) { return v; }
+        let res = (from..to).map(|i| {
+            let x = self.nums[i as usize];
+            let lkey = CoinKey { from, left, to: i, right: x };
+            let rkey = CoinKey { to, right, from: i + 1, left: x };
+            let val = x as i32 * left as i32 * right as i32;
+            self.calc(lkey) + self.calc(rkey) + val
+        }).max().unwrap_or(0);
+
+        self.cache.insert(key, res);
+        res
     }
 }
