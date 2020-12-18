@@ -5,6 +5,7 @@
 mod lol;
 mod leetcode;
 mod data;
+pub mod algo;
 
 
 fn main() {

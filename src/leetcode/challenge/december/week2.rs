@@ -130,3 +130,32 @@ impl CoinCalc {
         res
     }
 }
+
+pub fn partition(s: String) -> Vec<Vec<String>> {
+    fn is_palindrome(s: &str) -> bool {
+        s.chars().zip(s.chars().rev()).all(|(c1, c2)| c1 == c2)
+    }
+    let pals = (0..s.len()).map(|i|
+        (i + 1..=s.len()).filter(|&j| is_palindrome(&s[i..j])).collect::<Vec<_>>()
+    ).collect::<Vec<_>>();
+    let mut res = vec![];
+    let mut q = vec![(vec![], 0)];
+    while let Some((v, i)) = q.pop() {
+        if i == s.len() {
+            res.push(v);
+            continue;
+        }
+        for &j in &pals[i] {
+            let mut v1 = v.clone();
+            v1.push(s[i..j].to_string());
+            q.push((v1, j));
+        }
+    }
+    res
+}
+
+#[test]
+fn check_partition() {
+    println!("{:#?}", partition("aab".to_string()));
+}
+
