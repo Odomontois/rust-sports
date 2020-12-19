@@ -1,24 +1,30 @@
-use std::mem::swap;
-
 pub trait RadixSort {
     type Item: RadixU8 + ?Sized;
+
     fn rearrange<F>(&mut self, f: F) where F: Fn(&Self::Item) -> u8;
 
-    fn radix_sort(&mut self) { Self::Item::do_radix_sort(self); }
+    fn radix_sort(&mut self) { Self::Item::do_radix_sort_with(self, |x| x); }
+    fn radix_sort_with(&mut self) { Self::Item::do_radix_sort_with(self, |x| x); }
 }
 
 pub trait RadixU8 {
-    fn do_radix_sort<A: RadixSort<Item=Self> + ?Sized>(a: &mut A);
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self;
 }
 
 impl RadixU8 for i32 {
-    fn do_radix_sort<A: RadixSort<Item=Self> + ?Sized>(a: &mut A) {
-        a.rearrange(|&x| x as u8);
-        a.rearrange(|&x| (x >> 8) as u8);
-        a.rearrange(|&x| (x >> 16) as u8);
-        a.rearrange(|&x| ((x >> 24) ^ (1 << 7)) as u8); //flip the sign bit
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| ((*f(x) >> 24) ^ (1 << 7)) as u8); //flip the sign bit
     }
 }
+//
+// impl<X: RadixU8, Y: RadixU8> RadixU8 for (X, Y) {
+//     fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+//         Y::do_radix_sort_with(a, |x| &(f(x).1));
+//     }
+// }
 
 impl<A: RadixU8> RadixSort for Vec<A> {
     type Item = A;
@@ -98,7 +104,7 @@ mod test {
 
     #[test]
     fn rearrange_slice_test() {
-        let mut x = &mut [1, 2, 3, 4, 5, 6, 7, 8];
+        let x = &mut [1, 2, 3, 4, 5, 6, 7, 8];
         x.rearrange(|&e| (e % 2) as u8);
         assert_eq!(x, &mut [2, 4, 6, 8, 1, 3, 5, 7]);
         x.rearrange(|&e| (e % 3) as u8);
