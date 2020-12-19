@@ -1,10 +1,14 @@
 pub trait RadixSort {
-    type Item: RadixU8 + ?Sized;
+    type Item;
 
     fn rearrange<F>(&mut self, f: F) where F: Fn(&Self::Item) -> u8;
 
-    fn radix_sort(&mut self) { Self::Item::do_radix_sort_with(self, |x| x); }
-    fn radix_sort_with(&mut self) { Self::Item::do_radix_sort_with(self, |x| x); }
+    fn radix_sort(&mut self) where Self::Item: RadixU8 {
+        self.radix_sort_with(|x| x);
+    }
+    fn radix_sort_with<F, A: RadixU8>(&mut self, f: F) where F: Fn(&Self::Item) -> &A {
+        A::do_radix_sort_with(self, f);
+    }
 }
 
 pub trait RadixU8 {

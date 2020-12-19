@@ -92,4 +92,34 @@ fn kek() {
     println!("{}", None < Some(2))
 }
 
+pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+    let mut lines = grid.into_iter();
+    let first = if let Some(f) = lines.next() { f } else { return 0; };
+    let n = first.len();
+    let mut init = vec![vec![-1000_000_000; n]; n];
+    let ixs = |i: usize| i.max(1) - 1..(i + 2).min(n);
+    init[0][first.len() - 1] = first[0] + first.last().copied().unwrap_or(0);
+    lines.fold(init, |prev, line|
+        (0..n).map(|i| (0..n).map(|j| {
+            let profit = if i == j { line[i] } else { line[i] + line[j] };
+            ixs(i)
+                .filter_map(|ip| ixs(j).map(|jp| prev[ip][jp] + profit).max())
+                .max().unwrap_or(0)
+        }
+        ).collect()).collect(),
+    ).into_iter().filter_map(|v| v.into_iter().max()).max().unwrap_or(0)
+}
+
+#[test]
+fn cherry_test() {
+    fn check<'a, A>(xs: &'a [A]) where &'a A: IntoIterator<Item=&'a i32> {
+        let input = xs.iter().map(|v| v.into_iter().copied().collect()).collect();
+        println!("{}", cherry_pickup(input));
+    }
+    check(&[[3, 1, 1], [2, 5, 1], [1, 5, 5], [2, 1, 1]]);
+    check(&[[1, 0, 0, 0, 0, 0, 1], [2, 0, 0, 0, 0, 3, 0], [2, 0, 9, 0, 0, 0, 0], [0, 3, 0, 5, 4, 0, 0], [1, 0, 2, 3, 0, 0, 6]]);
+    check(&[[1, 0, 0, 3], [0, 0, 0, 3], [0, 0, 3, 3], [9, 0, 3, 3]]);
+    check(&[[1, 1], [1, 1]]);
+}
+
 
