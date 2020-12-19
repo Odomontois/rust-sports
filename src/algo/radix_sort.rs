@@ -15,20 +15,7 @@ pub trait RadixU8 {
     fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self;
 }
 
-impl RadixU8 for i32 {
-    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
-        a.rearrange(|x| *f(x) as u8);
-        a.rearrange(|x| (*f(x) >> 8) as u8);
-        a.rearrange(|x| (*f(x) >> 16) as u8);
-        a.rearrange(|x| ((*f(x) >> 24) ^ (1 << 7)) as u8); //flip the sign bit
-    }
-}
-//
-// impl<X: RadixU8, Y: RadixU8> RadixU8 for (X, Y) {
-//     fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
-//         Y::do_radix_sort_with(a, |x| &(f(x).1));
-//     }
-// }
+
 
 impl<A: RadixU8> RadixSort for Vec<A> {
     type Item = A;
@@ -94,7 +81,7 @@ mod test {
 
     #[test]
     fn size_test() {
-        println!("{} {}", size_of::<Option<usize>>(), size_of::<usize>())
+        println!("{} {}", size_of::<char>(), size_of::<usize>())
     }
 
     #[test]
@@ -135,5 +122,116 @@ mod test {
         x.as_mut_slice().radix_sort();
         y.sort();
         assert_eq!(x, y);
+    }
+}
+
+
+impl<X: RadixU8 + 'static, Y: RadixU8 + 'static> RadixU8 for (X, Y) {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        Y::do_radix_sort_with(a, |x| &(f(x).1));
+        X::do_radix_sort_with(a, |x| &(f(x).0));
+    }
+}
+
+
+impl<X: RadixU8 + 'static, Y: RadixU8 + 'static, Z: RadixU8+ 'static> RadixU8 for (X, Y, Z) {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        Z::do_radix_sort_with(a, |x| &(f(x).2));
+        Y::do_radix_sort_with(a, |x| &(f(x).1));
+        X::do_radix_sort_with(a, |x| &(f(x).0));
+    }
+}
+
+
+impl RadixU8 for i64 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| (*f(x) >> 24) as u8);
+        a.rearrange(|x| (*f(x) >> 32) as u8);
+        a.rearrange(|x| (*f(x) >> 40) as u8);
+        a.rearrange(|x| (*f(x) >> 48) as u8);
+        a.rearrange(|x| ((*f(x) >> 56) ^ (1 << 7)) as u8); //flip the sign bit
+    }
+}
+
+impl RadixU8 for i32 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| ((*f(x) >> 24) ^ (1 << 7)) as u8); //flip the sign bit
+    }
+}
+
+impl RadixU8 for i16 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| ((*f(x) >> 8) ^ (1 << 7)) as u8); //flip the sign bit
+    }
+}
+
+impl RadixU8 for i8 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| (*f(x) ^ (1 << 7)) as u8); //flip the sign bit
+    }
+}
+
+
+impl RadixU8 for u64 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| (*f(x) >> 24) as u8);
+        a.rearrange(|x| (*f(x) >> 32) as u8);
+        a.rearrange(|x| (*f(x) >> 40) as u8);
+        a.rearrange(|x| (*f(x) >> 48) as u8);
+        a.rearrange(|x| (*f(x) >> 56) as u8);
+    }
+}
+
+impl RadixU8 for u32 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| (*f(x) >> 24) as u8);
+    }
+}
+
+impl RadixU8 for u16 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+    }
+}
+
+impl RadixU8 for u8 {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x));
+    }
+}
+
+impl RadixU8 for char {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u32 as u8);
+        a.rearrange(|x| (*f(x) as u32 >> 8) as u8);
+        a.rearrange(|x| (*f(x) as u32 >> 16) as u8);
+        a.rearrange(|x| (*f(x) as u32 >> 24) as u8);
+    }
+}
+
+impl RadixU8 for usize {
+    fn do_radix_sort_with<A: RadixSort + ?Sized, F>(a: &mut A, f: F) where F: Fn(&A::Item) -> &Self {
+        a.rearrange(|x| *f(x) as u8);
+        a.rearrange(|x| (*f(x) >> 8) as u8);
+        a.rearrange(|x| (*f(x) >> 16) as u8);
+        a.rearrange(|x| (*f(x) >> 24) as u8);
+        a.rearrange(|x| (*f(x) >> 32) as u8);
+        a.rearrange(|x| (*f(x) >> 40) as u8);
+        a.rearrange(|x| (*f(x) >> 48) as u8);
+        a.rearrange(|x| (*f(x) >> 56) as u8);
     }
 }
