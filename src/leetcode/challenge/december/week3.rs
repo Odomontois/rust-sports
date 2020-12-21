@@ -122,4 +122,66 @@ fn cherry_test() {
     check(&[[1, 1], [1, 1]]);
 }
 
+pub fn decode_at_index_old(s: String, k: i32) -> String {
+    let mut parts = vec![];
+    let mut prev = 0;
+    let ca: Vec<_> = s.chars().collect();
+    for (i, c) in s.chars().enumerate() {
+        if let Some(d) = c.to_digit(10) {
+            parts.push((&ca[prev..i], d as u64));
+            prev = i + 1;
+        }
+    }
+    if prev < s.len() {
+        parts.push((&ca[prev..s.len()], 1))
+    }
+
+    let mut idx = k as u64 - 1;
+    'outer: loop {
+        let mut cur = 0u64;
+        for (s, d) in &parts {
+            let part = cur + s.len() as u64;
+            let whole = part * *d;
+            if part > idx {
+                return format!("{}", s[(idx - cur) as usize]);
+            } else if whole > idx {
+                idx %= part;
+                continue 'outer;
+            } else {
+                cur = whole;
+            }
+        }
+        panic!("idx is too big, length is {} {:?}", cur, parts)
+    }
+}
+
+pub fn decode_at_index(s: String, k: i32) -> String {
+    s.chars().try_fold(0u64, |l, c|
+        if let Some(d) = c.to_digit(10) {
+            if l * d as u64 >= k as u64 {
+                Err(decode_at_index(s.clone(), (k - 1) % l as i32 + 1))
+            } else { Ok(l * d as u64) }
+        } else if l + 1 == k as u64 {
+            Err(format!("{}", c))
+        } else { Ok(l + 1) },
+    ).expect_err("index is too large")
+}
+
+#[test]
+fn check_decode() {
+    fn check(s: &str, k: i32, ans: char) {
+        let res = decode_at_index(s.to_string(), k);
+        assert_eq!(res.chars().next(), Some(ans));
+        assert_eq!(res.len(), 1);
+    }
+    check("leet2code3", 10, 'o');
+    check("ha22", 5, 'h');
+    check("a2345678999999999999999", 1, 'a');
+    check("a2345678999999999999999", 1000_000_000, 'a');
+    check("abc2345678999999999999999", 1000_000_000, 'a');
+    check("abc", 1, 'a');
+    check("ab2c", 5, 'c');
+    check("ab2c", 3, 'a');
+}
+
 
