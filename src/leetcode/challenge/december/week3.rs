@@ -184,4 +184,16 @@ fn check_decode() {
     check("ab2c", 3, 'a');
 }
 
+pub fn smallest_range_ii(mut a: Vec<i32>, k: i32) -> i32 {
+    a.sort();
+    let bmin = a[0] + k;
+    let smax = a[a.len() - 1] - k;
+    a.windows(2).map(|w| smax.max(w[0] + k) - bmin.min(w[1] - k)).fold(smax - bmin + 2 * k, i32::min)
+}
+
+#[test]
+fn check() {
+    println!("{}", smallest_range_ii(vec![7, 8, 8], 5));
+}
+
 
