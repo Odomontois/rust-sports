@@ -20,7 +20,7 @@ impl KMP {
         it.kmp
     }
 
-    pub fn analyze<'a>(self: Self, target: &'a String) -> impl Iterator<Item=usize> + 'a {
+    pub fn analyze<'a>(self: Self, target: &'a str) -> impl Iterator<Item=usize> + 'a {
         KMPIter { pos: 0, kmp: self, target: target.chars() }
     }
 }
