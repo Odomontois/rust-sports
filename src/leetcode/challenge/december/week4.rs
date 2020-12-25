@@ -1,4 +1,6 @@
 use crate::leetcode::data::{Tree, List};
+use std::iter::once;
+use std::ops::Range;
 
 struct Solution();
 
@@ -49,5 +51,67 @@ impl Solution {
         node.next = Self::swap_pairs(next.next);
         next.next = Some(Box::new(node));
         Some(Box::new(next))
+    }
+}
+
+
+pub fn find_diagonal_order(matrix: Vec<Vec<i32>>) -> Vec<i32> {
+    let a = matrix.len();
+    let b = matrix.first().map(|v| v.len()).unwrap_or(0);
+    if a == 0 || b == 0 { return vec![]; }
+    diagonal_coef(a, b).map(|(i, j)| matrix[i][j]).collect()
+}
+
+
+fn box_it<A>(xs: impl IntoIterator<Item=A> + 'static) -> Box<dyn Iterator<Item=A>> { Box::new(xs.into_iter()) }
+
+struct Step<A> { range: Range<A>, rev: bool }
+
+impl<A> Step<A> {
+    fn back(mut self) -> Self {
+        self.rev = !self.rev;
+        self
+    }
+}
+
+impl<A> Iterator for Step<A> where Range<A>: DoubleEndedIterator<Item=A> {
+    type Item = A;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.rev { self.range.by_ref().rev().next() } else { self.range.next() }
+    }
+}
+
+fn step<A>(range: Range<A>) -> Step<A> { Step { range, rev: false } }
+
+pub fn diagonal_coef(a: usize, b: usize) -> impl Iterator<Item=(usize, usize)> {
+    let n = a.min(b);
+    let m = a.max(b);
+    let upleft = (1..n).map(|k| (step(0..k).back(), step(0..k)));
+    let downright = (0..n - 1).map(move |k| (step(a - k - 1..a).back(), step(b - k - 1..b))).rev();
+    let mid = (0..=m - n).map(move |k|
+        if a > b { (step(k..n + k).back(), step(0..n)) } else { (step(0..n).back(), step(k..n + k)) }
+    );
+    let dirs = once(true).chain(once(false)).cycle();
+    let it = upleft.chain(mid).chain(downright);
+    it.zip(dirs).flat_map(|((is, js), up)|
+        if up { is.zip(js) } else { is.back().zip(js.back()) }
+    )
+}
+
+#[test]
+fn diag_check() {
+    fn check(a: usize, b: usize) -> Vec<Vec<usize>> {
+        let mut x = vec![vec![0; b]; a];
+        for (k, (i, j)) in diagonal_coef(a, b).enumerate() {
+            if i >= a || j >= b { println!("{} {}", i, j); }
+
+            x[i][j] = k;
+        }
+        x
+    }
+    for &(a, b) in &[(4, 4), (5, 5), (5, 3), (3, 5), (1, 1)] {
+        for v in &check(a, b) { println!("{:?}", v) }
+        println!("-----------")
     }
 }
