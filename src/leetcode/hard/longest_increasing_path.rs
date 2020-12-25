@@ -13,8 +13,7 @@ pub fn longest_increasing_path(matrix: Vec<Vec<i32>>) -> i32 {
             }
         }
     }
-
-    paths.into_iter().filter_map(|row| row.into_iter().max()).max().unwrap_or(0)
+    paths.into_iter().flatten().max().unwrap_or(0)
 }
 
 #[test]
