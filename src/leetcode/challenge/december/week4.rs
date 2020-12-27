@@ -1,6 +1,8 @@
 use crate::leetcode::data::{Tree, List};
 use std::iter::once;
 use std::ops::Range;
+use std::collections::{HashSet, HashMap};
+use std::hash::Hash;
 
 struct Solution();
 
@@ -114,4 +116,65 @@ fn diag_check() {
         for v in &check(a, b) { println!("{:?}", v) }
         println!("-----------")
     }
+}
+
+pub fn num_decodings(s: String) -> i32 {
+    s.chars().rev().fold((' ', 0, 1), |(p, np, n), c| (c, n, (if ('1'..='9').contains(&c) { n + format!("{}{}", c, p).parse::<i32>().ok().filter(|&i| i <= 26).map(|_| np).unwrap_or(0) } else { 0 }))).2
+}
+
+#[test]
+fn test_num_decodings() {
+    fn check(x: &str, exp: i32) { assert_eq!(num_decodings(x.to_string()), exp) }
+    check("12", 2);
+    check("226", 3);
+    check("0", 0);
+    check("1", 1)
+}
+
+
+pub fn min_jumps<A: Copy + Hash + Eq>(arr: Vec<A>) -> i32 {
+    let n = arr.len();
+    let mut pos = HashMap::<A, Vec<usize>>::new();
+    for (i, a) in arr.iter().enumerate() {
+        if let Some(v) = pos.get_mut(a) {
+            v.push(i);
+        } else {
+            pos.insert(*a, vec![i]);
+        }
+    }
+    let mut seen = HashSet::new();
+    let mut seen_val = HashSet::new();
+    let mut q = vec![0];
+    let mut steps = 0;
+    seen.insert(0);
+    while !q.is_empty() {
+        let mut newq = vec![];
+        let mut vals = vec![];
+        let mut add = |z: usize| if !seen.contains(&z) {
+            seen.insert(z);
+            newq.push(z);
+        };
+        for i in q {
+            if i + 1 == n { return steps; }
+            if i > 0 { add(i - 1) }
+            if i + 1 < n { add(i + 1) }
+            let x = arr[i];
+            if !seen_val.contains(&x) {
+                seen_val.insert(x);
+                vals.push(x);
+            }
+        }
+        for &i in vals.iter().flat_map(|val| pos.get(val)).flatten() {
+            add(i)
+        }
+
+        q = newq;
+        steps += 1;
+    }
+    -1
+}
+
+#[test]
+fn lol() {
+    assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3)
 }
