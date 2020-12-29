@@ -1,7 +1,7 @@
 use crate::leetcode::data::{Tree, List};
 use std::iter::once;
 use std::ops::Range;
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashSet, HashMap, VecDeque, BTreeSet};
 use std::hash::Hash;
 
 struct Solution();
@@ -142,39 +142,52 @@ pub fn min_jumps<A: Copy + Hash + Eq>(arr: Vec<A>) -> i32 {
             pos.insert(*a, vec![i]);
         }
     }
-    let mut seen = HashSet::new();
+    let mut seen: HashSet<_> = once(0).collect();
     let mut seen_val = HashSet::new();
-    let mut q = vec![0];
-    let mut steps = 0;
-    seen.insert(0);
-    while !q.is_empty() {
-        let mut newq = vec![];
-        let mut vals = vec![];
-        let mut add = |z: usize| if !seen.contains(&z) {
-            seen.insert(z);
-            newq.push(z);
+    let mut q: VecDeque<_> = once((0, 0)).collect();
+    while let Some((i, steps)) = q.pop_front() {
+        let mut add = |z: usize| if seen.insert(z) {
+            q.push_back((z, steps + 1));
         };
-        for i in q {
-            if i + 1 == n { return steps; }
-            if i > 0 { add(i - 1) }
-            if i + 1 < n { add(i + 1) }
-            let x = arr[i];
-            if !seen_val.contains(&x) {
-                seen_val.insert(x);
-                vals.push(x);
+        if i + 1 == n { return steps; }
+        if i > 0 { add(i - 1) }
+        if i + 1 < n { add(i + 1) }
+        let x = arr[i];
+        if seen_val.insert(x) {
+            for &i in pos.get(&x).into_iter().flatten() {
+                add(i)
             }
         }
-        for &i in vals.iter().flat_map(|val| pos.get(val)).flatten() {
-            add(i)
-        }
-
-        q = newq;
-        steps += 1;
     }
     -1
 }
 
 #[test]
 fn lol() {
-    assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3)
+    assert_eq!(min_jumps(vec![100, -23, -23, 404, 100, 23, 23, 23, 3, 404]), 3);
+    assert_eq!(min_jumps(vec![7]), 0);
+    assert_eq!(min_jumps(vec![7, 6, 9, 6, 9, 6, 9, 7]), 1);
+    assert_eq!(min_jumps(vec![6, 1, 9]), 2);
+    assert_eq!(min_jumps(vec![11, 22, 7, 7, 7, 7, 7, 7, 7, 22, 13]), 3);
+}
+
+#[test]
+fn reach() {
+    let mut x = BTreeSet::new();
+    x.insert(0);
+    for i in 1..=20 {
+        x = x.into_iter().flat_map(|x| vec![x - i, x + i]).collect();
+        let n = i * (i + 1) / 2;
+        let exp = if i == 1 { vec![1, -1].into_iter().collect() } else { (n % 2..=n).step_by(2).flat_map(|i| vec![-i, i]).collect() };
+        assert_eq!(x, exp);
+        // println!("{:?}", x);
+    }
+}
+
+pub fn reach_number(target: i32) -> i32 {
+    let z = target.abs() as u64;
+    (0..).scan(0u64, |x, i| {
+        *x += i;
+        Some(*x)
+    }).position(|n| n >= z && n % 2 == z % 2).unwrap_or(0) as i32
 }
