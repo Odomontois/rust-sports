@@ -10,3 +10,4 @@ mod arigthmetic_slices_ii;
 mod shortest_palindrome;
 mod parallel_courses_ii;
 mod longest_increasing_path;
+mod maximize_xor;
