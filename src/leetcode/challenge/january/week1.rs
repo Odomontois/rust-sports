@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use crate::leetcode::data::{List, ListNode};
 
 pub fn can_form_array(arr: Vec<i32>, mut pieces: Vec<Vec<i32>>) -> bool {
     let mut rev: Vec<Option<usize>> = vec![None; 101];
@@ -54,4 +55,16 @@ impl Arrangement {
 fn arrangement() {
     let count: i32 = std::env::var("SIZE").ok().and_then(|x| x.parse().ok()).unwrap_or(15);
     println!("{}", Arrangement::new(count).count(0, 0));
+}
+
+impl Solution {
+    pub fn merge_two_lists(l1: List, l2: List) -> List {
+        let n1 = if let Some(n) = &l1 { &**n } else { return l2; };
+        let n2 = if let Some(n) = &l2 { &**n } else { return l1; };
+        if n1.val <= n2.val {
+            l1.map(|b| Box::new(ListNode { val: b.val, next: Self::merge_two_lists(b.next, l2) }))
+        } else {
+            l2.map(|b| Box::new(ListNode { val: b.val, next: Self::merge_two_lists(l1, b.next) }))
+        }
+    }
 }
