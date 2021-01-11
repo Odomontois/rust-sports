@@ -13,7 +13,7 @@ pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String
         }
     }
     let mut seen: HashSet<_> = vec![&begin_word].into_iter().collect();
-    let mut q: VecDeque<_> = vec![(&begin_word, 1)].into_iter().collect();
+    let mut q: VecDeque<_> = vec![(&begin_word, 0)].into_iter().collect();
     while let Some((word, k)) = q.pop_front() {
         if word == &end_word { return k; }
         for i in 0..word.len() {
@@ -35,5 +35,5 @@ fn ladder_test() {
         ), exp)
     }
 
-    check("hit", "cog", &["hot", "dot", "dog", "lot", "log", "cog"], 5);
+    check("hit", "cog", &["hot","dot","dog","lot","log","cog"], 5);
 }
