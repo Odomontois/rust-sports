@@ -11,3 +11,5 @@ mod shortest_palindrome;
 mod parallel_courses_ii;
 mod longest_increasing_path;
 mod maximize_xor;
+mod minimum_time_required;
+mod distance_limited_paths_exists;
