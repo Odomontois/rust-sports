@@ -41,3 +41,7 @@ impl TreeNode {
 }
 
 pub type Tree = Option<Rc<RefCell<TreeNode>>>;
+
+pub fn tree(val: i32, left: Tree, right: Tree) -> Tree {
+    Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
+}

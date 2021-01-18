@@ -1,4 +1,6 @@
-use std::collections::{HashMap, HashSet, VecDeque, BTreeSet};
+use std::collections::{BTreeSet, HashMap, HashSet, VecDeque};
+use std::iter::{once};
+
 use crate::leetcode::data::{List, ListNode};
 
 pub fn ladder_length(begin_word: String, end_word: String, word_list: Vec<String>) -> i32 {
@@ -86,3 +88,40 @@ pub fn num_rescue_boats(mut people: Vec<i32>, limit: i32) -> i32 {
 }
 
 
+pub fn min_operations1(nums: Vec<i32>, x: i32) -> i32 {
+    fn sums<'a>(xs: impl Iterator<Item=&'a i32> + 'a) -> impl Iterator<Item=i32> + 'a {
+        once(0).chain(xs.scan(0, |s, &x| {
+            *s += x;
+            Some(*s)
+        }))
+    }
+    let forward = sums(nums.iter()).enumerate().map(|(i, s)| (s, i)).collect::<HashMap<_, _>>();
+    let n = nums.len() as i32;
+
+    sums(nums.iter().rev()).enumerate().filter_map(|(i, s)|
+        forward.get(&(x - s)).map(|&j| (i + j) as i32).filter(|&k| k <= n)
+    ).min().unwrap_or(-1)
+}
+
+pub fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
+    let forward = std::iter::once(0).chain(nums.iter().scan(0, |s, &x| {
+        *s += x;
+        Some(*s)
+    })).enumerate();
+    let s: i32 = nums.iter().copied().sum();
+    let mut back = forward.clone().map(|(i, x)| (nums.len() - i, s - x)).peekable();
+    let mut forward = forward.peekable();
+    std::iter::from_fn(|| {
+        let &(i, a) = forward.peek()?;
+        let &(j, b) = back.peek()?;
+        if a + b < x { forward.next() } else { back.next() };
+        Some(Some((i + j) as i32).filter(|_| a + b == x && i + j <= nums.len()))
+    }).flatten().min().unwrap_or(-1)
+}
+
+#[test]
+fn min_op_test() {
+    assert_eq!(min_operations(vec![1, 1, 4, 2, 3], 5), 2);
+    assert_eq!(min_operations(vec![5, 6, 7, 8, 9], 4), -1);
+    assert_eq!(min_operations(vec![3, 2, 20, 1, 1, 3], 10), 5);
+}

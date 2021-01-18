@@ -13,3 +13,8 @@ mod longest_increasing_path;
 mod maximize_xor;
 mod minimum_time_required;
 mod distance_limited_paths_exists;
+// mod check_ways_1719;
+mod cuboids_1691;
+mod count_subgraphs_for_each_diameter;
+mod trapping_rain_water;
+mod binary_tree_codec;
