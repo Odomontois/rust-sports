@@ -76,3 +76,71 @@ fn comb(n: usize, k: usize) -> u64 {
         }
     }
 }
+
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let s = s.into_bytes();
+        String::from_utf8((1..s.len() - 1).map(|i| (i, i))
+            .chain((0..s.len()).map(|i| (i, i + 1)))
+            .map(|(i, j)|
+                (i, j, (1..=i.min(s.len() - j)).take_while(|&k| s[i - k] == s[j + k - 1]).count())
+            )
+            .max_by_key(|&(i, j, k)| 2 * k + j - i)
+            .map(|(i, j, k)| &s[i - k..j + k])
+            .unwrap_or(&[])
+            .to_vec()).unwrap()
+    }
+}
+
+pub fn longest_palindrome(string: String) -> String {
+    palindromes(&string, true)
+        .chain(palindromes(&string, false))
+        .max_by_key(|pal| pal.len())
+        .unwrap_or("")
+        .to_string()
+}
+
+fn palindromes(string: &str, odd: bool) -> impl Iterator<Item=&str> {
+    let bytes = string.as_bytes();
+    (0..bytes.len()).map(move |start| {
+        let right = start + odd as usize;
+        let max_shift = start.min(bytes.len() - right);
+        let still_palindrome = |&shift: &usize| bytes[start - shift] == bytes[right + shift - 1];
+        let shift = (1..=max_shift).take_while(still_palindrome).count();
+        &string[start - shift..right + shift]
+    })
+}
+
+#[test]
+fn test_lp() {
+    fn check(s: &str, exp: &str) { assert_eq!(longest_palindrome(s.to_string()), exp.to_string()) }
+    check("a", "a");
+    check("", "");
+    check("ab", "b");
+    check("abba", "abba");
+    check(":&( abbath", "abba");
+    check("love cocks?", "coc");
+}
+
+pub fn is_valid(s: String) -> bool {
+    let mut stack = Vec::new();
+    static PAIRS: [&str; 3] = ["()", "[]", "{}"];
+    for c in s.chars() {
+        if "([{".contains(c) { stack.push(c) } else if
+        !stack.pop().iter().any(|&x| PAIRS.contains(&format!("{}{}", x, c).as_str())) { return false; }
+    }
+    stack.is_empty()
+}
+
+pub fn most_competitive(nums: Vec<i32>, k: i32) -> Vec<i32> {
+    let mut seen = vec![0; k as usize];
+    let (n, k) = (nums.len(), k as usize);
+    nums.into_iter().enumerate().fold(0, |mut p, (i, x)| {
+        while p > 0 && seen[p - 1] < x && n - i + p >= k { p -= 1 }
+        if p + 1 < k {
+            seen[p] = x;
+            p + 1
+        } else { p }
+    });
+    seen
+}

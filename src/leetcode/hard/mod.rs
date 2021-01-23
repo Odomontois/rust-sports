@@ -18,3 +18,4 @@ mod cuboids_1691;
 mod count_subgraphs_for_each_diameter;
 mod trapping_rain_water;
 mod binary_tree_codec;
+mod reverse_pairs;
