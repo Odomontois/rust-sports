@@ -20,27 +20,29 @@ fn v_traverse(root: Tree, x: i32, y: i32, vs: &mut BTreeMap<i32, Vec<(i32, i32)>
     Some(())
 }
 
-async fn do_thing_1() {}
-
-fn do_thing_2() -> Result<(), &'static str> {
-    Ok(())
+pub fn next_permutation<A: Ord>(nums: &mut Vec<A>) {
+    let swaps = (0..nums.len() - 1).rev()
+        .find(|&i| nums[i] < nums[i + 1])
+        .and_then(|i|
+            (0..nums.len()).rev()
+                .skip_while(|&j| nums[i] >= nums[j])
+                .next().map(|j| (i, j)));
+    if let Some((i, j)) = swaps {
+        nums.swap(i, j);
+        nums[i + 1..].reverse();
+    } else {
+        nums.reverse();
+    }
 }
 
-fn do_thing_3() -> Result<(), &'static str> {
-    Ok(())
+#[test]
+fn check_perm() {
+    fn check(xs: &[i32], exp: &[i32]) {
+        let mut xs = xs.iter().copied().collect();
+        next_permutation(&mut xs);
+        assert_eq!(&xs[..], exp);
+    }
+    check(&[1, 2, 3], &[1, 3, 2]);
+    check(&[1, 5, 1], &[5, 1, 1]);
 }
 
-// async fn get_sum(maybe_x: Option<i32>, maybe_y: Option<i32>) -> Result<i32, &'static str> {
-//     let x = maybe_x.into_result().or_else(|| {
-//         do_thing_1().await;
-//         do_thing_2()?;
-//         return Err("Bad x");
-//     });
-//     let y = if let Some(y) = maybe_y {
-//         y
-//     } else {
-//         do_thing_3()?;
-//         return Err("This time something wrong with y");
-//     };
-//     return Ok(x + y);
-// }
