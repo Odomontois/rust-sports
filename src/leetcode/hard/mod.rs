@@ -20,3 +20,4 @@ mod trapping_rain_water;
 mod binary_tree_codec;
 mod reverse_pairs;
 mod find_in_mountain;
+mod closest_subsequence;

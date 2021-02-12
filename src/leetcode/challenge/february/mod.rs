@@ -1,3 +1,5 @@
+mod week2;
+
 use crate::leetcode::data::Tree;
 
 struct Solution;
