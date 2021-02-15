@@ -1,6 +1,6 @@
-use crate::leetcode::data::{Tree, TreeNode, tree};
-use std::rc::Rc;
+use crate::leetcode::data::{Tree, TreeNode};
 use std::cell::RefCell;
+use std::rc::Rc;
 
 struct Codec {}
 
@@ -9,7 +9,9 @@ struct Codec {}
  * If you need a mutable reference, change it to `&mut self` instead.
  */
 impl Codec {
-    fn new() -> Self { Codec {} }
+    fn new() -> Self {
+        Codec {}
+    }
 
     fn serialize(&self, root: Tree) -> String {
         let mut stack = vec![Some(root)];
@@ -34,21 +36,38 @@ impl Codec {
     fn deserialize(&self, data: String) -> Tree {
         let mut state = Deserialize::new();
 
-        data.split_ascii_whitespace().try_for_each(|t| state.feed(t)).unwrap();
+        data.split_ascii_whitespace()
+            .try_for_each(|t| state.feed(t))
+            .unwrap();
         state.result().unwrap()
     }
 }
 
-struct Deserialize { stack: Vec<(Place, TreeNode)>, res: Option<Tree> }
+struct Deserialize {
+    stack: Vec<(Place, TreeNode)>,
+    res: Option<Tree>,
+}
 
 impl Deserialize {
-    fn new() -> Self { Deserialize { stack: Vec::new(), res: None } }
+    fn new() -> Self {
+        Deserialize {
+            stack: Vec::new(),
+            res: None,
+        }
+    }
 
     fn feed_new_tree(&mut self, token: &str) -> Result<(), String> {
         match token {
-            "[" => Ok(self.stack.push((Place::Val, TreeNode { val: 0, left: None, right: None }))),
+            "[" => Ok(self.stack.push((
+                Place::Val,
+                TreeNode {
+                    val: 0,
+                    left: None,
+                    right: None,
+                },
+            ))),
             "[]" => self.feed_top(None),
-            _ => Err(format!("expected `[` or `[]` , got `{}`", token))
+            _ => Err(format!("expected `[` or `[]` , got `{}`", token)),
         }
     }
 
@@ -69,7 +88,7 @@ impl Deserialize {
                 *p = Place::End;
                 &mut t.right
             }
-            _ => return Err(format!("unexpected error"))
+            _ => return Err(format!("unexpected error")),
         };
         Ok(*v = tree)
     }
@@ -83,7 +102,9 @@ impl Deserialize {
             *p = Place::Left;
             return Ok(());
         } else if *p == Place::End {
-            if token != "]" { return Err(format!("expected `]` got {}", token)); }
+            if token != "]" {
+                return Err(format!("expected `]` got {}", token));
+            }
             let (_, n) = self.stack.pop().unwrap();
             return self.feed_top(Some(Rc::new(RefCell::new(n))));
         }
@@ -95,19 +116,34 @@ impl Deserialize {
 }
 
 #[derive(Eq, PartialEq, Debug, Ord, PartialOrd)]
-enum Place { Val, Left, Right, End }
-
-
-#[test]
-fn ser_test() {
-    let t = tree(1,
-                 tree(2, tree(3, None, None), None),
-                 tree(4, None, tree(5, None, None)));
-    println!("{}", Codec::new().serialize(t));
+enum Place {
+    Val,
+    Left,
+    Right,
+    End,
 }
 
-#[test]
-fn deser_test() {
-    println!("{:?}", Codec::new().deserialize(format!("[]")));
-    println!("{:?}", Codec::new().deserialize(format!("[ 1 [ 2 [ 3 [] [] ] [] ] [ 4 [] [ 5 [] [] ] ] ] ")));
+#[cfg(test)]
+mod test {
+    use super::*;
+    use crate::leetcode::data::tree;
+
+    #[test]
+    fn ser_test() {
+        let t = tree(
+            1,
+            tree(2, tree(3, None, None), None),
+            tree(4, None, tree(5, None, None)),
+        );
+        println!("{}", Codec::new().serialize(t));
+    }
+
+    #[test]
+    fn deser_test() {
+        println!("{:?}", Codec::new().deserialize(format!("[]")));
+        println!(
+            "{:?}",
+            Codec::new().deserialize(format!("[ 1 [ 2 [ 3 [] [] ] [] ] [ 4 [] [ 5 [] [] ] ] ] "))
+        );
+    }
 }

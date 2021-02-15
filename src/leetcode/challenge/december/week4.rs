@@ -1,7 +1,7 @@
 use crate::leetcode::data::{Tree, List};
 use std::iter::once;
 use std::ops::Range;
-use std::collections::{HashSet, HashMap, VecDeque, BTreeSet};
+use std::collections::{HashSet, HashMap, VecDeque};
 use std::hash::Hash;
 
 struct Solution();
@@ -173,7 +173,7 @@ fn lol() {
 
 #[test]
 fn reach() {
-    let mut x = BTreeSet::new();
+    let mut x = std::collections::BTreeSet::new();
     x.insert(0);
     for i in 1..=20 {
         x = x.into_iter().flat_map(|x| vec![x - i, x + i]).collect();
