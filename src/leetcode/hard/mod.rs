@@ -22,3 +22,7 @@ mod reverse_pairs;
 mod find_in_mountain;
 mod closest_subsequence;
 mod connected_trio;
+mod attend_max_value;
+mod check_partitioning;
+mod tree_of_comprimes;
+mod max_palindrome_subseq;

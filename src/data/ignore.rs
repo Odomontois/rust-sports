@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 
+#[derive(Debug)]
 pub struct Ign<A>(pub A);
 
 impl<A> PartialEq for Ign<A> {
