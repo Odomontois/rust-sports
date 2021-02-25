@@ -1,5 +1,6 @@
 mod week2;
 mod week3;
+mod week4;
 
 use crate::leetcode::data::Tree;
 

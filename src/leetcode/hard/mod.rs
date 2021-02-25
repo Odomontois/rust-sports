@@ -26,3 +26,5 @@ mod attend_max_value;
 mod check_partitioning;
 mod tree_of_comprimes;
 mod max_palindrome_subseq;
+// mod min_op_make_subseq;
+mod cat_and_mouse;
