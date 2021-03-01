@@ -28,3 +28,8 @@ mod tree_of_comprimes;
 mod max_palindrome_subseq;
 // mod min_op_make_subseq;
 mod cat_and_mouse;
+mod make_array_increasing;
+mod num_perms_per_sequence;
+mod stone_game_iii;
+mod repeated_digits;
+mod freq_stack;
