@@ -7,3 +7,4 @@ pub mod boxed;
 pub mod du;
 pub mod fenwick;
 pub mod ignore;
+pub mod segpos;
