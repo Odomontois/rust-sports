@@ -3,6 +3,7 @@ pub mod w215;
 pub mod bw39;
 mod bw40;
 mod bw42;
+mod bw47;
 
 #[allow(dead_code)]
 pub fn get_maximum_generated(n: i32) -> i32 {

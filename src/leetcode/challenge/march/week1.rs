@@ -1,3 +1,7 @@
+use std::usize;
+
+use crate::leetcode::data::Tree;
+
 struct Search<'a> {
     nums: &'a [i32],
     from: i32,
@@ -54,12 +58,32 @@ pub fn find_error_nums(nums: Vec<i32>) -> Vec<i32> {
             return vec![
                 l.duplicate().or(r.duplicate()).unwrap(),
                 l.missing().or(r.missing()).unwrap(),
-            ]
+            ];
         }
     }
 }
 
 #[test]
-fn check_find_error_nums(){
-    assert_eq!(find_error_nums(vec![1,2,2,4]), vec![2, 3])
+fn check_find_error_nums() {
+    assert_eq!(find_error_nums(vec![1, 2, 2, 4]), vec![2, 3])
+}
+
+pub fn average_of_levels(root: Tree) -> Vec<f64> {
+    let mut v = vec![];
+    fill_average(&mut v, 0, root);
+    v.into_iter().map(|(s, c)| s as f64 / c as f64).collect()
+}
+
+fn fill_average(v: &mut Vec<(i64, usize)>, i: usize, root: Tree) -> Option<()> {
+    let r = root?;
+    let node = r.borrow();
+    if i >= v.len() {
+        v.push((0, 0))
+    }
+    let k = &mut v[i];
+    k.0 += node.val as i64;
+    k.1 += 1;
+    fill_average(v, i + 1, node.left.clone());
+    fill_average(v, i + 1, node.right.clone());
+    Some(())
 }
