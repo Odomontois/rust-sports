@@ -1,3 +1,13 @@
+use SuffixType::*;
+
+pub fn last_substring(s: String) -> String {
+    s[find_last(s.as_bytes())..].to_string()
+}
+
+fn find_last<A: Suffix>(xs: &[A]) -> usize {
+    *suffix_array(xs).last().unwrap()
+}
+
 // Created base on https://zork.net/~st/jottings/sais.html
 #[derive(Clone, Copy, Ord, PartialOrd, Eq, PartialEq, Debug)]
 enum SuffixType {
@@ -5,13 +15,10 @@ enum SuffixType {
     L,
 }
 
-use SuffixType::*;
-
 trait Suffix: Ord {
     const TOTAL_SIZE: usize;
     fn order(&self) -> usize;
 }
-
 #[derive(Debug, Clone)]
 struct Summary {
     summary: Vec<usize>,
@@ -240,12 +247,6 @@ fn suffix_array<A: Suffix>(data: &[A]) -> Vec<usize> {
     SuffixArray::make(data, A::TOTAL_SIZE, Runtime).suffix_array_is_sa()
 }
 
-fn naive_suf_array<A: Ord>(data: &[A]) -> Vec<usize> {
-    let mut res: Vec<_> = (0..=data.len()).collect();
-    res.sort_by_key(|&x| &data[x..]);
-    res
-}
-
 impl Suffix for u8 {
     fn order(&self) -> usize {
         *self as usize
@@ -259,7 +260,7 @@ impl Suffix for usize {
         *self
     }
 
-    const TOTAL_SIZE: usize = usize::MAX;
+    const TOTAL_SIZE: usize = std::usize::MAX;
 }
 
 trait Debugger: Copy {
@@ -267,86 +268,7 @@ trait Debugger: Copy {
 }
 
 #[derive(Clone, Copy)]
-struct Console;
-impl Debugger for Console {
-    fn show_suffix_array(&self, arr: &[Option<usize>], pos: Option<usize>) {
-        println!(
-            "{}",
-            arr.iter()
-                .map(|ox| ox.map(|x| format!("{:02}", x)).unwrap_or("--".to_string()))
-                .collect::<Vec<_>>()
-                .join(" ")
-        );
-        for p in pos {
-            println!(
-                "{}",
-                (0..arr.len())
-                    .map(|i| if i == p { "^^" } else { "  " })
-                    .collect::<Vec<_>>()
-                    .join(" ")
-            );
-        }
-    }
-}
-
-#[derive(Clone, Copy)]
 struct Runtime;
 impl Debugger for Runtime {
     fn show_suffix_array(&self, _: &[Option<usize>], _: Option<usize>) {}
-}
-
-mod test {
-    #[allow(unused_imports)]
-    use std::iter::from_fn;
-
-    #[allow(unused_imports)]
-    use rand::{thread_rng, RngCore};
-
-    #[allow(unused_imports)]
-    use super::*;
-
-    fn verbose_test(word: &str) {
-        let data = word.as_bytes();
-        let res = SuffixArray::make(data, 256, Console).suffix_array_is_sa();
-        let exp = naive_suf_array(data);
-        assert_eq!(res, exp)
-    }
-
-    fn runtime_test(word: &str) {
-        let data = word.as_bytes();
-        let res = suffix_array(data);
-        let exp = naive_suf_array(data);
-        assert_eq!(res, exp)
-    }
-
-    #[test]
-    fn cabbage_guess_test() {
-        verbose_test("cabbage")
-    }
-
-    #[test]
-    fn baa_guess_test() {
-        verbose_test("baabaabac")
-    }
-
-    #[test]
-    fn random_test() {
-        let mut random = thread_rng();
-        let b: String = from_fn(|| Some(random.next_u32()))
-            .map(|i| ['x', 'y'][i as usize % 2])
-            .take(1000)
-            .collect();
-        runtime_test(&b)
-    }
-
-    #[test]
-    fn big_test() {
-        let mut random = thread_rng();
-        let b: Vec<u8> = from_fn(|| Some(random.next_u32()))
-            .map(|i| ['x', 'y'][i as usize % 2] as u8)
-            .take(1000000)
-            .collect();
-        let x = suffix_array(&b);
-        assert_eq!(x.len(), b.len() + 1)
-    }
 }

@@ -35,3 +35,7 @@ mod repeated_digits;
 mod freq_stack;
 mod online_majority;
 // mod recover_bst;
+mod min_deletion_size;
+mod last_substring;
+mod maximum_score_of_subarray;
+mod make_xor_zero;
