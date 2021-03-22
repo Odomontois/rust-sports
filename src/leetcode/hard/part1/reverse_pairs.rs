@@ -1,9 +1,9 @@
-use crate::data::fenwick::Fen;
+use crate::data::fenwick::FenSum;
 
 pub fn reverse_pairs(nums: Vec<i32>) -> i32 {
     let mut sorted: Vec<_> = nums.iter().map(|&x| x as i64).collect();
     sorted.sort();
-    let mut fen = Fen::new(0, nums.len());
+    let mut fen = FenSum::new(0, nums.len());
     nums.into_iter().map(|x| {
         let before = sorted.binary_search(&(2 * x as i64 + 1)).unwrap_or_else(|x| x);
         let mine = sorted.binary_search(&(x as i64)).unwrap();

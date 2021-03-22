@@ -1,11 +1,12 @@
-// #![feature(array_map)]
 #![allow(dead_code)]
-// #![feature(type_alias_impl_trait)]
+#[macro_use]
+extern crate lazy_static;
 
 mod lol;
 mod leetcode;
 mod data;
 pub mod algo;
+pub mod playground;
 
 
 fn main() {
