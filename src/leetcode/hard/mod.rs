@@ -1,2 +1,6 @@
 mod part1;
 mod car_fleet2;
+mod min_operations_to_make_subseq;
+mod count_pairs_with_xor_in_a_range;
+mod nqueens;
+mod sudoku;
