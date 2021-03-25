@@ -4,3 +4,4 @@ mod min_operations_to_make_subseq;
 mod count_pairs_with_xor_in_a_range;
 mod nqueens;
 mod sudoku;
+mod strange_printer_ii;
