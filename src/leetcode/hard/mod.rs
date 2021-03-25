@@ -5,3 +5,5 @@ mod count_pairs_with_xor_in_a_range;
 mod nqueens;
 mod sudoku;
 mod strange_printer_ii;
+mod count_routes;
+mod palindrome_partinioning_iii;
