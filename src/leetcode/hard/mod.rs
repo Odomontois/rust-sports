@@ -7,3 +7,4 @@ mod sudoku;
 mod strange_printer_ii;
 mod count_routes;
 mod palindrome_partinioning_iii;
+mod building_boxes;

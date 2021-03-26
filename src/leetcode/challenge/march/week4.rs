@@ -163,3 +163,32 @@ fn test_walk() {
         &[[0, 4], [1, 3], [1, 4], [2, 2], [3, 0], [3, 1], [4, 0]],
     )
 }
+
+fn char_count(s: &str) -> impl Iterator<Item = (usize, i8)> + '_ {
+    let mut current = [0i8; 26];
+    s.chars().map(|c| c as usize - 'a' as usize).map(move |x| {
+        current[x] += 1;
+        (x, current[x])
+    })
+}
+pub fn word_subsets(a: Vec<String>, b: Vec<String>) -> Vec<String> {
+    let mut total = [0i8; 26];
+    for b in &b {
+        for (ch, occ) in char_count(b) {
+            total[ch] = total[ch].max(occ);
+        }
+    }
+    let req = total.iter().filter(|&&x| x != 0).count();
+    let universal = |a: &String| char_count(a).filter(|&(ch, occ)| occ == total[ch]).count() == req;
+    a.into_iter().filter(universal).collect()
+}
+
+#[test]
+fn check_kek() {
+    fn tinfo<T>() {
+        println!("{}: {}", std::any::type_name::<T>(), std::mem::size_of::<T>(),)
+    }
+    tinfo::<[i8; 26]>();
+    tinfo::<Option<()>>();
+    tinfo::<()>();
+}
