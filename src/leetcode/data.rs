@@ -20,6 +20,10 @@ impl ListNode {
     }
 }
 
+pub fn list(xs: &[i32]) -> List {
+    ListNode::from_slice(xs)
+}
+
 pub type List = Option<Box<ListNode>>;
 
 fn cons(val: i32, next: List) -> List {

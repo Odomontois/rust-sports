@@ -8,3 +8,6 @@ mod strange_printer_ii;
 mod count_routes;
 mod palindrome_partinioning_iii;
 mod building_boxes;
+mod visible_points;
+mod nice_divisors;
+mod connect_two_groups; 

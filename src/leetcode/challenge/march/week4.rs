@@ -1,5 +1,7 @@
 use std::collections::{HashSet, VecDeque};
 use std::iter::once;
+use std::iter::repeat;
+use std::vec;
 use std::{collections::HashMap, usize};
 
 pub fn spellchecker(wordlist: Vec<String>, queries: Vec<String>) -> Vec<String> {
@@ -191,4 +193,79 @@ fn check_kek() {
     tinfo::<[i8; 26]>();
     tinfo::<Option<()>>();
     tinfo::<()>();
+}
+
+pub fn count_substrings(s: String) -> i32 {
+    let b = s.into_bytes();
+    (0..2 * b.len() + 1)
+        .map(|i| {
+            let (s, e) = (i / 2, (i + 1) / 2);
+            (0..)
+                .take_while(|&k| k <= s && e + k < b.len() && b[s - k] == b[e + k])
+                .count() as i32
+        })
+        .sum()
+}
+
+pub fn original_digits(s: String) -> String {
+    let mut chars = [0; 26];
+    let mut digs = [0; 10];
+    let idx = |c: char| c as usize - 'a' as usize;
+    s.chars().for_each(|c| chars[idx(c)] += 1);
+    let mut calc = |d: usize, word: &str, c: char| {
+        let k = chars[idx(c)];
+        digs[d] = k;
+        word.chars().for_each(|c| chars[idx(c)] -= k)
+    };
+    calc(0, "zero", 'z');
+    calc(2, "two", 'w');
+    calc(6, "six", 'x');
+    calc(8, "eight", 'g');
+    calc(4, "four", 'u');
+    calc(1, "one", 'o');
+    calc(7, "seven", 's');
+    calc(3, "three", 'h');
+    calc(5, "five", 'v');
+    calc(9, "nine", 'i');
+    (0..=9)
+        .flat_map(|d| repeat(('0' as u8 + d as u8) as char).take(digs[d]))
+        .collect()
+}
+
+pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
+    envelopes.sort_by_key(|e| (e[0], -e[1]));
+    let mut seq = vec![];
+    for env in envelopes {
+        let i = seq.binary_search(&env[1]).unwrap_or_else(|e| e);
+        if i == seq.len() {
+            seq.push(env[1])
+        }
+        seq[i] = env[1];
+    }
+    seq.len() as i32
+}
+
+#[test]
+fn envs_test() {
+    fn check(xs: &[[i32; 2]], exp: i32) {
+        assert_eq!(max_envelopes(xs.into_iter().map(|v| v.to_vec()).collect()), exp)
+    }
+    check(
+        &[
+            [2, 1],
+            [4, 1],
+            [6, 2],
+            [8, 3],
+            [10, 5],
+            [12, 8],
+            [14, 13],
+            [16, 21],
+            [18, 34],
+            [20, 55],
+        ],
+        9,
+    );
+    check(&[[5, 4], [6, 4], [6, 7], [2, 3]], 3);
+    check(&[[1, 1], [1, 1], [1, 1]], 1);
+    check(&[[46, 89], [50, 53], [52, 68], [72, 45], [77, 81]], 3);
 }

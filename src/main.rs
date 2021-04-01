@@ -7,6 +7,7 @@ mod leetcode;
 mod data;
 pub mod algo;
 pub mod playground;
+mod codejam;
 
 
 fn main() {
