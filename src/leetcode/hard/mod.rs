@@ -11,3 +11,5 @@ mod building_boxes;
 mod visible_points;
 mod nice_divisors;
 mod connect_two_groups; 
+mod stone_game_iv;
+mod finding_mk_average;
