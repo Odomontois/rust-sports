@@ -8,3 +8,4 @@ pub mod du;
 pub mod fenwick;
 pub mod ignore;
 pub mod segpos;
+pub mod modnum;

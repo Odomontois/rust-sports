@@ -13,3 +13,6 @@ mod nice_divisors;
 mod connect_two_groups; 
 mod stone_game_iv;
 mod finding_mk_average;
+mod make_string_sorted;
+mod critical_connections;
+mod subsequences_gcd;
