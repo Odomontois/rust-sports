@@ -13,7 +13,7 @@ pub fn count_different_subsequence_gc_ds(nums: Vec<i32>) -> i32 {
                     let u = x * j - from;
                     u >= 0 && bit_set[u as usize / 64] & (1 << u % 64) != 0
                 })
-                .fold(None, |p, x| Some(gcd(p.unwrap_or(x), x)))
+                .fold(None, |p, x|  Some(gcd(p.unwrap_or(x), x)))
                 == Some(1)
         })
         .count() as i32
