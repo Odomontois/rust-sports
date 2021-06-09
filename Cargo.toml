@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 rand = "0.7"
 lazy_static = "1.4.0"
+itertools = "0.10.0"
 
 [workspace]
 members=["codejam"]
