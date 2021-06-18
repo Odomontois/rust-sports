@@ -1,3 +1,6 @@
+#![allow(dead_code)]
+
+
 mod which_are_in;
 mod nums_of_people_in_the_bus;
 mod printer_errors;
@@ -13,3 +16,7 @@ mod common_denominators;
 mod sum_of_pairs;
 mod nonogram_solver;
 mod next_bigger_number;
+mod boolfuck;
+mod format_duration;
+mod rail_fence_cipher;
+// mod algebraic_isomorphism;

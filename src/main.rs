@@ -8,7 +8,6 @@ mod data;
 pub mod algo;
 pub mod playground;
 mod codejam;
-mod codewars;
 
 
 fn main() {
