@@ -10,6 +10,7 @@ edition = "2018"
 rand = "0.7"
 lazy_static = "1.4.0"
 itertools = "0.10.0"
+data = {path = "data"}
 
 [workspace]
-members=["codejam", "codewars"]
+members=["codejam", "codewars", "leetold", "data"]

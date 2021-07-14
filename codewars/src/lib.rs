@@ -19,4 +19,7 @@ mod next_bigger_number;
 mod boolfuck;
 mod format_duration;
 mod rail_fence_cipher;
+mod twice_linear;
+mod n_linear;
+mod simple_assembler;
 // mod algebraic_isomorphism;
