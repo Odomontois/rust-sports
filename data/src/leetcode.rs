@@ -30,7 +30,7 @@ fn cons(val: i32, next: List) -> List {
     Some(Box::new(ListNode { val, next }))
 }
 
-pub fn list_iter_mut(lst: &mut List) -> impl Iterator<Item=&mut i32>{
+pub fn list_iter_mut(lst: &mut List) -> impl Iterator<Item = &mut i32> {
     ListIterMut(Some(lst))
 }
 
@@ -75,6 +75,11 @@ pub fn tree(val: i32, left: Tree, right: Tree) -> Tree {
     Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
 
-pub fn leaf(val: i32) -> Tree{
+pub fn leaf(val: i32) -> Tree {
     tree(val, None, None)
+}
+
+#[test]
+fn tree_eq() {
+    assert_eq!(tree(1, leaf(2), leaf(3)), tree(1, leaf(2), leaf(3)))
 }
