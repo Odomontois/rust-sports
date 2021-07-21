@@ -31,3 +31,24 @@ fn search(root: &Tree, x: i32, y: i32) -> Done {
         .next(|| search(&node.right, x, y))
         .0
 }
+
+use rand::{prelude::{SliceRandom, ThreadRng}, thread_rng};
+struct Solution(Vec<i32>, ThreadRng);
+
+impl Solution {
+    fn new(nums: Vec<i32>) -> Self {
+        Self(nums, thread_rng())
+    }
+
+    /** Resets the array to its original configuration and return it. */
+    fn reset(&self) -> Vec<i32> {
+        self.0.clone()
+    }
+
+    /** Returns a random shuffling of the array. */
+    fn shuffle(&mut self) -> Vec<i32> {
+        let mut q = self.0.clone();
+        q.shuffle(&mut self.1);
+        q
+    }
+}
