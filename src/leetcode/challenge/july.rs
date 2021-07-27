@@ -32,7 +32,10 @@ fn search(root: &Tree, x: i32, y: i32) -> Done {
         .0
 }
 
-use rand::{prelude::{SliceRandom, ThreadRng}, thread_rng};
+use rand::{
+    prelude::{SliceRandom, ThreadRng},
+    thread_rng,
+};
 struct Solution(Vec<i32>, ThreadRng);
 
 impl Solution {
@@ -52,3 +55,24 @@ impl Solution {
         q
     }
 }
+
+fn combine<S: Copy, I>(f: impl Fn(S, I) -> S) -> impl Fn(&mut S, I) -> Option<S> {
+    move |s, i| {
+        *s = f(*s, i);
+        Some(*s)
+    }
+}
+
+pub fn partition_disjoint(nums: Vec<i32>) -> i32 {
+    nums.iter()
+        .copied()
+        .rev()
+        .skip(1)
+        .chain(vec![0])
+        .zip(nums.iter().copied().scan(-1, combine(i32::max)))
+        .position(|(am, y)| y <= am)
+        .map_or(0, |x| x as i32 + 1)
+}
+
+mod prune_tree;
+mod three_sum_closest;
