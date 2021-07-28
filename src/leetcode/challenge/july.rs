@@ -76,3 +76,4 @@ pub fn partition_disjoint(nums: Vec<i32>) -> i32 {
 
 mod prune_tree;
 mod three_sum_closest;
+mod beautiful_array;
