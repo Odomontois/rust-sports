@@ -1,4 +1,5 @@
 use std::collections::BTreeSet;
+use std::iter::successors;
 
 pub fn three_sum_closest_bts(nums: Vec<i32>, target: i32) -> i32 {
     let mut t = BTreeSet::new();
@@ -23,23 +24,16 @@ pub fn three_sum_closest_bts(nums: Vec<i32>, target: i32) -> i32 {
 
 pub fn three_sum_closest(mut nums: Vec<i32>, target: i32) -> i32 {
     nums.sort();
-    let mut best = i32::MAX;
-    for i in 0..nums.len() {
-        let mut j = i + 1;
-        let mut k = nums.len() - 1;
-        while j < k {
-            let s = nums[i] + nums[j] + nums[k];
-            if (target - s).abs() < (target - best).abs() {
-                best = s
-            }
-            if s < target {
-                j += 1
-            } else if s > target {
-                k -= 1
+    let f = |(i, &x): (usize, &i32)| {
+        let s = successors(Some(&nums[i + 1..]), move |s| {
+            if x + s[0] + s[s.len() - 1] < target {
+                Some(&s[1..])
             } else {
-                return target
+                Some(&s[..s.len() - 1])
             }
-        }
-    }
-    best
+        });
+        s.take_while(|s| s.len() > 1).map(move |s| x + s[0] + s[s.len() - 1])
+    };
+    let ns = nums.iter().enumerate().flat_map(f);
+    ns.min_by_key(|&s| (target - s).abs()).unwrap()
 }
