@@ -12,5 +12,6 @@ pub mod ignore;
 pub mod segpos;
 pub mod modnum;
 pub mod radix_sort;
+pub mod neighbors;
 
 extern crate rand;

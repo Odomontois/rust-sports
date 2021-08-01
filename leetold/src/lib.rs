@@ -2,6 +2,8 @@
 #[macro_use]
 extern crate lazy_static;
 
+extern crate itertools;
+
 mod leetold;
 
 extern crate data;

@@ -5,4 +5,5 @@ version = "0.1.0"
 [dependencies]
 lazy_static = "1.4.0"
 rand = "0.7"
+itertools = "0.10.0"
 data = {path = "../data"}
