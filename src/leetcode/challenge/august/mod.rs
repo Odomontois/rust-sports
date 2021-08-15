@@ -3,3 +3,4 @@ mod subsets;
 mod rank_transform;
 mod flip_string;
 mod can_reorder_doubled;
+mod set_matrix_zeroes;
