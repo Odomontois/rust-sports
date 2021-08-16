@@ -4,3 +4,4 @@ mod rank_transform;
 mod flip_string;
 mod can_reorder_doubled;
 mod remove_boxes;
+mod set_matrix_zeroes;
