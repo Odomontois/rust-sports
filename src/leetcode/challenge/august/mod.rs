@@ -7,4 +7,3 @@ mod set_matrix_zeroes;
 mod min_window;
 mod split_tree;
 mod remove_boxes;
-mod set_matrix_zeroes;
