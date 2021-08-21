@@ -1,1 +1,2 @@
 mod longest_obstacle_course;
+mod palindromic_product;
