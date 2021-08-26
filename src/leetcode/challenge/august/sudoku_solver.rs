@@ -21,6 +21,7 @@ pub fn solve_sudoku(board: &mut Vec<Vec<char>>) {
 }
 
 use core::panic;
+use std::ops::{Deref, DerefMut};
 
 fn restriction(kind: usize, x: usize, y: usize) -> usize {
     kind * 81 + x * 9 + y
@@ -75,6 +76,113 @@ struct Solver {
     rqueue: Vec<LinkNode>,
     rcounts: Vec<usize>,
     solution: Vec<usize>,
+}
+
+trait Accessor: Copy {
+    fn access<'a>(&self, src: &'a Solver, idx: usize) -> &'a LinkNode;
+    fn access_mut<'a>(&self, src: &'a mut Solver, idx: usize) -> &'a mut LinkNode;
+}
+
+struct Link<'a, A: Accessor> {
+    root: &'a mut Solver,
+    idx: usize,
+    acc: A,
+}
+
+impl<'a, A: Accessor> Link<'a, A> {
+    fn next_link(&mut self) -> Link<A> {
+        let idx = self.next;
+        Link {
+            root: self.root,
+            idx,
+            acc: self.acc,
+        }
+    }
+
+    fn prev_link(&mut self) -> Link<A> {
+        let idx = self.prev;
+        Link {
+            root: self.root,
+            acc: self.acc,
+            idx,
+        }
+    }
+
+    fn remove(&mut self) {
+        self.acc.access_mut(self.root, self.next).prev = self.prev;
+        self.acc.access_mut(self.root, self.prev).next = self.next;
+    }
+
+    fn restore(&mut self) {
+        self.acc.access_mut(self.root, self.next).prev = self.idx;
+        self.acc.access_mut(self.root, self.prev).next = self.idx;
+    }
+}
+
+impl<'a, A: Accessor> IntoIterator for Link<'a, A> {
+    type Item = &'a mut LinkNode;
+
+    type IntoIter = LinkIter<'a, A>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        LinkIter {
+            idx: None,
+            idx_back: None,
+            acc: self.acc,
+            root: self.root,
+            start: self.idx,
+        }
+    }
+}
+
+impl<'a, A: Accessor> Deref for Link<'a, A> {
+    type Target = LinkNode;
+
+    fn deref(&self) -> &Self::Target {
+        self.acc.access(self.root, self.idx)
+    }
+}
+
+impl<'a, A: Accessor> DerefMut for Link<'a, A> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.acc.access_mut(self.root, self.idx)
+    }
+}
+
+struct LinkIter<'a, A: Accessor> {
+    root: &'a mut Solver,
+    start: usize,
+    idx: Option<usize>,
+    idx_back: Option<usize>,
+    acc: A,
+}
+
+impl<'a, A: Accessor> Iterator for LinkIter<'a, A> {
+    type Item = &'a mut LinkNode;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        let next = self.acc.access(self.root, self.idx.unwrap_or(self.start)).next;
+        self.idx = Some(next);
+        if next == self.start {
+            None
+        } else {
+            let root: &'a mut Solver = unsafe { &mut *(self.root as *mut _) };
+            Some(self.acc.access_mut(root, next))
+        }
+    }
+}
+
+impl<'a, A: Accessor> DoubleEndedIterator for LinkIter<'a, A> {
+    fn next_back(&mut self) -> Option<Self::Item> {
+        let prev = self.acc.access(self.root, self.idx_back.unwrap_or(self.start)).prev;
+        self.idx_back = Some(prev);
+        if prev == self.start {
+            None
+        } else {
+            let root: &'a mut Solver = unsafe { &mut *(self.root as *mut _) };
+            Some(self.acc.access_mut(root, prev))
+        }
+    }
 }
 
 impl Solver {
@@ -266,9 +374,7 @@ impl Solver {
             return false;
         }
 
-        let vs = self.get_variants(restr);
-
-        for &v in &vs {
+        for v in self.get_variants(restr) {
             self.use_variant(v);
             if self.solve() {
                 return true;
@@ -277,6 +383,40 @@ impl Solver {
         }
 
         false
+    }
+}
+
+#[derive(Clone, Copy)]
+struct RestrAcc;
+impl Accessor for RestrAcc {
+    fn access<'a>(&self, src: &'a Solver, idx: usize) -> &'a LinkNode {
+        &src.rels[idx].restriction
+    }
+
+    fn access_mut<'a>(&self, src: &'a mut Solver, idx: usize) -> &'a mut LinkNode {
+        &mut src.rels[idx].restriction
+    }
+}
+#[derive(Clone, Copy)]
+struct VarAcc;
+impl Accessor for VarAcc {
+    fn access<'a>(&self, src: &'a Solver, idx: usize) -> &'a LinkNode {
+        &src.rels[idx].variant
+    }
+
+    fn access_mut<'a>(&self, src: &'a mut Solver, idx: usize) -> &'a mut LinkNode {
+        &mut src.rels[idx].variant
+    }
+}
+#[derive(Clone, Copy)]
+struct RQAcc;
+impl Accessor for RQAcc {
+    fn access<'a>(&self, src: &'a Solver, idx: usize) -> &'a LinkNode {
+        &src.rqueue[idx]
+    }
+
+    fn access_mut<'a>(&self, src: &'a mut Solver, idx: usize) -> &'a mut LinkNode {
+        &mut src.rqueue[idx]
     }
 }
 

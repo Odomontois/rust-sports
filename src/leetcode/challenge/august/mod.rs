@@ -9,3 +9,4 @@ mod split_tree;
 mod remove_boxes;
 mod sudoku_solver;
 mod rectange_area_2;
+mod preorder_serialization;
