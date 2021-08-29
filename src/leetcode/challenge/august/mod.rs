@@ -12,3 +12,4 @@ mod rectange_area_2;
 mod preorder_serialization;
 mod uncommon_subsequence;
 mod job_scheduling;
+mod min_patch;
