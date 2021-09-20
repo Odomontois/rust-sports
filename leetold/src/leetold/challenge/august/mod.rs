@@ -13,3 +13,4 @@ mod preorder_serialization;
 mod uncommon_subsequence;
 mod job_scheduling;
 mod min_patch;
+mod min_in_rotated;
