@@ -9,3 +9,4 @@ mod reverse_letters;
 mod longest_turbulent;
 mod distinct_subsequences;
 mod tic_tac_toe;
+mod unique_concat;
