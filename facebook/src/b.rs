@@ -1,6 +1,5 @@
 use std::{
     collections::{HashMap, HashSet},
-    fmt::rt::v1::Count,
 };
 
 use crate::err::*;
@@ -54,30 +53,32 @@ impl Tree {
         }
         Counts::default()
     }
-    fn init_sum(&self, i: usize, cnts: &Counts) -> Item {
-        let f = self.freqs[i];
-        let 
-        (i, Some((self.freqs[i], 1)).into_iter().collect(), self.edges[i].clone())
+    fn init_req(&self, i: usize) -> (usize, Vec<usize>) {
+        (i, self.edges[i].clone())
     }
     fn walk_req(&self) -> u32 {
         let cnts = self.walk_sum();
         let mut seen = HashSet::<usize>::new();
-        let mut stack = vec![self.init_sum(0)];
+        let mut stack = vec![self.init_req(0)];
         let mut reqs: Counts = HashMap::new();
         let mut drops = 0;
-        while let Some((i, m, mut cs)) = stack.pop() {
+        while let Some((i, mut cs)) = stack.pop() {
             if let Some(c) = cs.pop() {
-                stack.push((i, m, cs));
+                stack.push((i, cs));
                 if seen.insert(c) {
-                    stack.push(self.init_sum(c));
+                    stack.push(self.init_req(c));
                 }
             } else {
-                if let Some((p, mut pm, pcs)) = stack.pop() {
-                    pm = merge(m, pm);
-                    stack.push((p, pm, pcs));
-                } else {
-                    return m;
+                let f = self.freqs[i];
+                let c = reqs.entry(f).or_insert(cnts[&f]);
+                *c -= 1;
+                if *c == 0 {
+                    reqs.remove(&f);
                 }
+                if reqs.is_empty() {
+                    drops += 1;
+                }
+                println!("{:?}", (i, &reqs));
             }
         }
         drops
