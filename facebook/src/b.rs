@@ -95,16 +95,3 @@ fn merge(mut m1: Counts, m2: Counts) -> Counts {
     m1
 }
 
-fn merge2(mut m1: Counts, m2: Counts, cnt: &Counts) -> Counts {
-    if m1.len() < m2.len() {
-        return merge(m2, m1);
-    }
-    for (k, v) in m2 {
-        let c = m1.entry(k).or_insert(0);
-        *c += v;
-        if *c == cnt[&k] {
-            m1.remove(&k);
-        }
-    }
-    m1
-}
