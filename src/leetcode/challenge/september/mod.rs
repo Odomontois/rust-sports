@@ -12,3 +12,4 @@ mod tic_tac_toe;
 mod unique_concat;
 mod break_pal;
 mod obstacle_path;
+mod chessboard;
