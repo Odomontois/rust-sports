@@ -6,8 +6,8 @@ pub fn largest_rectangle_area(heights: Vec<i32>) -> i32 {
 }
 
 fn dists_left<'a>(heights: impl IntoIterator<Item = &'a i32>) -> Vec<usize> {
-    let mut stack: Vec<(usize, i32)> = vec![];
-    let dist = |(i, &h): (usize, &i32)| {
+    let mut stack = vec![];
+    let dist = |(i, &h)| {
         while stack.last().filter(|&&(_, p)| p >= h).is_some() {
             stack.pop();
         }
