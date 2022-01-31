@@ -4,3 +4,5 @@ mod palindromic_product;
 mod num_ways;
 mod subseq_repeated;
 mod maximum_running_time;
+mod k_increasing;
+mod group_of_strings;
