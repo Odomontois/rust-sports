@@ -6,3 +6,4 @@ mod subseq_repeated;
 mod maximum_running_time;
 mod k_increasing;
 mod group_of_strings;
+mod illegal_cars;

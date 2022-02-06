@@ -4,6 +4,7 @@ pub fn max_total_fruits(fruits: Vec<Vec<i32>>, start_pos: i32, k: i32) -> i32 {
     back_and_forth(left_to_right, start_pos, k).max(back_and_forth(right_to_left, -start_pos, k))
 }
 
+#[allow(unused_mut, unused_variables)]
 pub fn back_and_forth(fruits: impl Iterator<Item = [i32; 2]> + Clone, pos: i32, k: i32) -> i32 {
     let mut sum = 0;
     let mut prev = pos;
