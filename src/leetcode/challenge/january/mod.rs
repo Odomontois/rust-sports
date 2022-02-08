@@ -5,5 +5,4 @@ mod elements_in_binary_tree;
 mod add_and_search;
 mod largest_rectangle;
 mod rotate_array;
-mod maximum_fruits;
 mod sum4_2;
