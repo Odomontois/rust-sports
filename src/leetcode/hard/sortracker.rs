@@ -1,6 +1,23 @@
-use std::{cmp::Reverse, collections::BinaryHeap};
+use std::{
+    cell::RefCell,
+    cmp::{Ordering, Reverse},
+    collections::{BinaryHeap, HashMap},
+    marker::PhantomData,
+    rc::Rc,
+};
 
 type City = (Reverse<i32>, String);
+
+struct Pool<'a, A> {
+    elems: Vec<A>,
+    cmp_cache: HashMap<(usize, usize), Ordering>,
+    ph: PhantomData<&'a u8>,
+}
+
+struct PoolElem<'a, A> {
+    pool: Rc<RefCell<Pool<'a, A>>>,
+    ix: usize,
+}
 #[derive(Default)]
 struct SORTracker {
     top: BinaryHeap<City>,
