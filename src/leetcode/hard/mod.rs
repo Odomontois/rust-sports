@@ -12,4 +12,7 @@ mod find_substring_hash;
 mod maximum_fruits;
 mod sortracker;
 mod pairs_divisible;
+mod hamiltonian_path;
+mod minimum_time_to_finish_the_race;
+mod max_and_sum;
 
