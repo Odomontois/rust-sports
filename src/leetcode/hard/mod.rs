@@ -15,4 +15,5 @@ mod pairs_divisible;
 mod hamiltonian_path;
 mod minimum_time_to_finish_the_race;
 mod max_and_sum;
+mod max_task_assign;
 
