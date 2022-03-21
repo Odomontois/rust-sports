@@ -20,7 +20,6 @@ pub fn solve_sudoku(board: &mut Vec<Vec<char>>) {
     }
 }
 
-use core::panic;
 use std::ops::{Deref, DerefMut};
 
 fn restriction(kind: usize, x: usize, y: usize) -> usize {
