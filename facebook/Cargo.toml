@@ -1,0 +1,12 @@
+[package]
+name = "facebook"
+version = "0.1.0"
+authors = ["Oleg Nizhnik <odomontois@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+rand = "0.7"
+lazy_static = "1.4.0"
+itertools = "0.10.0"
+scan_fmt="0.2"
+

@@ -13,4 +13,4 @@ itertools = "0.10.0"
 data = {path = "data"}
 
 [workspace]
-members=["codejam", "codewars", "leetold", "data"]
+members=["codejam", "codewars", "leetold", "data", "facebook"]

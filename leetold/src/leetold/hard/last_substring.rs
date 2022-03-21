@@ -247,6 +247,14 @@ fn suffix_array<A: Suffix>(data: &[A]) -> Vec<usize> {
     SuffixArray::make(data, A::TOTAL_SIZE, Runtime).suffix_array_is_sa()
 }
 
+impl<A: Suffix> Suffix for Option<A> {
+    const TOTAL_SIZE: usize = A::TOTAL_SIZE + 1;
+
+    fn order(&self) -> usize {
+        self.as_ref().map_or(0, |x| x.order() + 1)
+    }
+}
+
 impl Suffix for u8 {
     fn order(&self) -> usize {
         *self as usize
