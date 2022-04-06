@@ -1,11 +1,4 @@
-use std::{collections::BTreeSet, convert::TryInto};
-
-#[derive(Clone, Copy, Debug)]
-enum Cost {
-    None,
-    Best(u32),
-    Two(u32, u32),
-}
+use std::{collections::VecDeque, convert::TryInto};
 
 pub fn second_minimum<A, V, I>(n: i32, edges: I, time: i32, change: i32) -> i32
 where
@@ -15,7 +8,7 @@ where
 {
     let n = n as usize;
     let mut adj = vec![vec![] as Vec<usize>; n];
-    let mut best = vec![Cost::None; n];
+    let mut best = vec![None; n];
     let to_szarr = |xs: V| {
         xs.into_iter()
             .map(opt_into)
@@ -27,32 +20,27 @@ where
         adj[x].push(y);
         adj[y].push(x);
     }
-    let mut q = BTreeSet::new();
+    let mut q = VecDeque::new();
 
-    q.insert((0, 0));
+    q.push_back((0, 0));
 
-    while let Some(&(cost, idx)) = q.iter().next() {
-        q.remove(&(cost, idx));
+    while let Some((cost, idx)) = q.pop_front() {
         let cost = cost + 1;
         for &next in &adj[idx] {
-            let (switch, put, remove) = match best[next] {
-                Cost::None => (Cost::Best(cost), true, None),
-                Cost::Best(b) if b != cost => (Cost::Two(b.min(cost), b.max(cost)), true, None),
-                Cost::Two(b, s) if cost < s && b != cost => (Cost::Two(b.min(cost), b.max(cost)), true, Some(s)),
-                c => (c, false, None),
+            let (switch, put) = match best[next] {
+                None => (Some((cost, None)), true),
+                Some((b, None)) if b < cost => (Some((b, Some(cost))), true),
+                c => (c, false),
             };
             best[next] = switch;
             if put {
-                q.insert((cost, next));
-            }
-            for cost in remove {
-                q.remove(&(cost, next));
+                q.push_back((cost, next));
             }
         }
     }
 
     let steps = match best[n - 1] {
-        Cost::Two(_, s) => s,
+        Some((_, Some(s))) => s,
         _ => return -1,
     };
 
