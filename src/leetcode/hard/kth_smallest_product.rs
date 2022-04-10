@@ -1,6 +1,6 @@
 use std::{
     cmp::Ordering,
-    ops::{Add, Div, Mul},
+    ops::{Add, Deref, Div, Mul},
 };
 
 pub fn kth_smallest_product<V1: AsRef<[i32]>, V2: AsRef<[i32]>>(nums1: V1, nums2: V2, k: i64) -> i64 {
@@ -15,13 +15,13 @@ pub fn kth_smallest_product<V1: AsRef<[i32]>, V2: AsRef<[i32]>>(nums1: V1, nums2
     if k <= negs {
         let sp1 = VecSP(from_neg(n1), from_pos(p2));
         let sp2 = VecSP(from_neg(n2), from_pos(p1));
-        -(sp1, sp2).kth_product(negs - k + 1)
+        -sp1.with(sp2).kth_product(negs - k + 1)
     } else if k <= negs + zeros {
         0
     } else {
         let sp1 = VecSP(from_neg(n1), from_neg(n2));
         let sp2 = VecSP(from_pos(p1), from_pos(p2));
-        (sp1, sp2).kth_product(k - negs - zeros)
+        sp1.with(sp2).kth_product(k - negs - zeros)
     }
 }
 
@@ -72,6 +72,14 @@ trait SmallestProduct<A> {
             }
         }
     }
+
+    fn with<Y>(self, y: Y) -> With<Self, Y>
+    where
+        Self: Sized,
+        Y: SmallestProduct<A>,
+    {
+        With(self, y)
+    }
 }
 
 struct VecSP<A>(Vec<A>, Vec<A>);
@@ -86,10 +94,12 @@ impl<A: SPItem> SmallestProduct<A> for VecSP<A> {
     }
 }
 
-impl<V1, V2, A: Ord + Copy> SmallestProduct<A> for (V1, V2)
+struct With<X, Y>(X, Y);
+
+impl<X, Y, A: Ord + Copy> SmallestProduct<A> for With<X, Y>
 where
-    V1: SmallestProduct<A>,
-    V2: SmallestProduct<A>,
+    X: SmallestProduct<A>,
+    Y: SmallestProduct<A>,
 {
     fn count_le(&self, prod: A) -> usize {
         self.0.count_le(prod) + self.1.count_le(prod)
@@ -100,16 +110,16 @@ where
     }
 }
 
-impl<V, A: Ord + Copy, const N: usize> SmallestProduct<A> for [V; N]
+impl<A, R> SmallestProduct<A> for R
 where
-    V: SmallestProduct<A>,
+    R: Deref<Target = dyn SmallestProduct<A>>,
 {
     fn count_le(&self, prod: A) -> usize {
-        self.iter().map(|v| v.count_le(prod)).sum()
+        (**self).count_le(prod)
     }
 
     fn high(&self) -> A {
-        self.iter().map(|v| v.high()).max().unwrap()
+        (**self).high()
     }
 }
 
