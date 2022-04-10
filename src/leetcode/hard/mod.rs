@@ -4,3 +4,5 @@ mod max_value_of_coins;
 mod longest_repeating;
 
 mod second_minimum_time;
+
+mod kth_smallest_product;
