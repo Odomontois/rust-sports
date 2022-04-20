@@ -1,10 +1,6 @@
-use std::{
-    cell::RefCell,
-    iter::{empty, from_fn, once, Peekable},
-    rc::Rc,
-};
+use std::iter::{empty, from_fn, once, Peekable};
 
-use data::leetcode::{Tree, TreeNode};
+use data::leetcode::Tree;
 
 struct BSTIterator(Peekable<Box<dyn Iterator<Item = i32>>>);
 
