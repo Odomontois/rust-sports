@@ -12,7 +12,7 @@ where
             .zip(positions.as_ref())
             .map(|(name, vp)| starts(name.as_ref(), vp.as_ref()[0] as i8, vp.as_ref()[1] as i8)),
     );
-    vects.into_iter().map(|start| moves(&start)).sum::<i32>() as i32
+    vects.map(|start| moves(&start)).sum::<i32>() as i32
 }
 #[derive(Clone, Copy, Debug)]
 struct Piece {
