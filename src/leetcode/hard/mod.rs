@@ -6,3 +6,5 @@ mod longest_repeating;
 mod second_minimum_time;
 
 mod kth_smallest_product;
+
+mod escape_spreading_fire;
