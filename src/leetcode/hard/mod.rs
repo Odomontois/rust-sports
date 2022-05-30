@@ -10,5 +10,9 @@ mod kth_smallest_product;
 mod escape_spreading_fire;
 mod full_bloom_flowers;
 mod max_score_of_node_sequence;
+mod valid_parenthesis_path;
+mod substring_with_largest_variance;
+
+mod booking_tickets;
 
 
