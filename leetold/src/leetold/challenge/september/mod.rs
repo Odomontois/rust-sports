@@ -13,3 +13,5 @@ mod unique_concat;
 mod break_pal;
 mod obstacle_path;
 mod chessboard;
+
+mod expression_ops;
