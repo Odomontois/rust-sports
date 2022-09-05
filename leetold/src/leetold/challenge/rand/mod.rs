@@ -23,7 +23,7 @@ impl Search {
     fn find_best(&mut self, es: impl IntoIterator<Item=i32>) -> Option<(i32, usize)> {
         es.into_iter().map(|i: i32| (i, self.calc_best(i).map(|(_, s)| s + 1).unwrap_or(1))).max_by_key(|&(_, l)| l)
     }
-    #[allow(dead_code, mutable_borrow_reservation_conflict)]
+    #[allow(dead_code)]
     fn calc_best(&mut self, start: i32) -> Option<(i32, usize)> {
         match self.cache.get(&start)? {
             Found(res) => *res,

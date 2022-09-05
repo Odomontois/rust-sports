@@ -7,3 +7,5 @@ mod min_score_after_removal;
 mod k_inverse_pairs_array;
 
 mod number_of_submatrices;
+
+mod meeting_rooms3;
