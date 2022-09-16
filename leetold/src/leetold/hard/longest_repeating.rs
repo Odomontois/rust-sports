@@ -19,14 +19,14 @@ where
 #[derive(Clone, Copy, Debug, Default)]
 struct Border<A> {
     val: A,
-    len: usize,
+    len: u32,
 }
 #[derive(Clone, Copy, Debug, Default)]
 struct State<A> {
     left: Border<A>,
     right: Border<A>,
-    longest: usize,
-    len: usize,
+    longest: u32,
+    len: u32,
 }
 
 impl<A: Eq + Copy> State<A> {
@@ -98,7 +98,7 @@ impl<A: Eq + Default + Copy> SegTree<A> {
         self.update_iter(i, a, 0, 0, self.size);
     }
 
-    pub fn longest(&self) -> usize {
+    pub fn longest(&self) -> u32 {
         self.states[0].longest
     }
 
