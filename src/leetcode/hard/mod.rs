@@ -12,3 +12,7 @@ mod k_inverse_pairs_array;
 mod number_of_submatrices;
 
 mod meeting_rooms3;
+
+mod online_stock_span;
+
+mod subarrays_with_median;
