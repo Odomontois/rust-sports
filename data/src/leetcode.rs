@@ -69,9 +69,34 @@ impl TreeNode {
     }
 }
 
+pub trait IntoTree {
+    fn tree(self) -> Tree;
+}
+
+impl IntoTree for Tree {
+    fn tree(self) -> Tree {
+        self
+    }
+}
+
+impl IntoTree for i32 {
+    fn tree(self) -> Tree {
+        (self, None, None).tree()
+    }
+}
+
+impl<A: IntoTree, B: IntoTree> IntoTree for (i32, A, B) {
+    fn tree(self) -> Tree {
+        let (val, left, right) = self;
+        let (left, right) = (left.tree(), right.tree());
+        Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
+    }
+}
+
 pub type Tree = Option<Rc<RefCell<TreeNode>>>;
 
-pub fn tree(val: i32, left: Tree, right: Tree) -> Tree {
+pub fn tree(val: i32, left: impl IntoTree, right: impl IntoTree) -> Tree {
+    let (left, right) = (left.tree(), right.tree());
     Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
 }
 
@@ -81,5 +106,5 @@ pub fn leaf(val: i32) -> Tree {
 
 #[test]
 fn tree_eq() {
-    assert_eq!(tree(1, leaf(2), leaf(3)), tree(1, leaf(2), leaf(3)))
+    assert_eq!((1, 2, 3).tree(), (1, 2, 3).tree())
 }

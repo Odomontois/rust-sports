@@ -5,3 +5,5 @@ mod kth_smallest;
 mod split_array_consecutive;
 mod randomset;
 mod middle_of_the_linked;
+mod leaf_similar;
+mod lfu_cache;

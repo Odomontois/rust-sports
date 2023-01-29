@@ -6,3 +6,4 @@ mod borrows;
 mod uninit_let;
 mod count_integers_in_intervals;
 mod enum_unsidpatch;
+mod advent;
