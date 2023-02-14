@@ -13,8 +13,6 @@ fn add_step(mem: &mut u8, (ox, oy): (Option<u8>, Option<u8>)) -> Option<u8> {
 }
 
 fn digits(s: &str) -> impl Iterator<Item = Option<u8>> + '_ {
-    s.bytes()
-        .rev()
-        .map(|x| Some(x - '0' as u8))
-        .chain(std::iter::repeat(None))
+    use std::iter::repeat;
+    s.bytes().rev().map(|x| Some(x - '0' as u8)).chain(repeat(None))
 }
