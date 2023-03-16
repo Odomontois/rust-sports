@@ -11,3 +11,4 @@ mod best_team_woith_no_conflicts;
 mod gcd_of_strings;
 mod add_binary;
 mod symmetric_tree;
+mod complete_binary_tree;
