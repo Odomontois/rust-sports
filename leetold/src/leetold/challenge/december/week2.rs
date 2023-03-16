@@ -42,11 +42,11 @@ impl BSTIterator {
                 Val(x) => return x,
                 Node(nr) => {
                     let n = nr.borrow();
-                    for r in n.right.clone() {
+                    if let Some(r) = n.right.clone() {
                         self.stack.push(Node(r))
                     }
                     self.stack.push(Val(n.val));
-                    for l in n.left.clone() {
+                    if let Some(l) = n.left.clone() {
                         self.stack.push(Node(l))
                     }
                 }

@@ -32,7 +32,7 @@ impl SORTracker {
     fn add(&mut self, name: String, score: i32) {
         let city = (Reverse(score), name);
         if Some(&city) < self.top.peek() {
-            for t in self.top.pop() {
+            if let Some(t) = self.top.pop() {
                 self.bot.push(Reverse(t))
             }
             self.top.push(city)
@@ -42,7 +42,7 @@ impl SORTracker {
     }
 
     fn get(&mut self) -> String {
-        for Reverse(city) in self.bot.pop() {
+        if let Some(Reverse(city)) = self.bot.pop() {
             self.top.push(city.clone());
             return city.1;
         }

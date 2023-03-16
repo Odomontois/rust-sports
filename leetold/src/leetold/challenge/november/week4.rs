@@ -174,7 +174,7 @@ pub fn max_sliding_window(nums: Vec<i32>, k: i32) -> Vec<i32> {
     for &k in start { add(&mut window, k, 1); }
     for (&left, &right) in nums.iter().zip(cont.iter()) {
         add(&mut window, right, 1);
-        for &x in window.keys().rev().next() { res.push(x) }
+        if let Some(&x) = window.keys().rev().next() { res.push(x) }
         add(&mut window, left, -1);
     }
     res

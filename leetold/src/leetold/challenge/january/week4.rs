@@ -37,7 +37,7 @@ pub fn diagonal_sort(mut mat: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
     }
     for i in 0..n {
         for j in 0..m {
-            for x in d[i + m - 1 - j].pop() {
+            if let Some(x) = d[i + m - 1 - j].pop() {
                 mat[i][j] = x;
             }
         }

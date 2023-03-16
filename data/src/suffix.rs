@@ -277,7 +277,7 @@ impl Debugger for Console {
                 .collect::<Vec<_>>()
                 .join(" ")
         );
-        for p in pos {
+        if let Some(p) = pos {
             println!(
                 "{}",
                 (0..arr.len())

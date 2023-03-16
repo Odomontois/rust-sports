@@ -55,12 +55,12 @@ impl FrontMiddleBackQueue {
 
     fn fix(&mut self) {
         if self.right.len() < self.left.len() + 1 {
-            for x in self.left.pop_back() {
+            if let Some(x) = self.left.pop_back() {
                 self.right.push_front(x)
             }
         }
         if self.left.len() < self.right.len() {
-            for x in self.right.pop_front() {
+            if let Some(x) = self.right.pop_front() {
                 self.left.push_back(x)
             }
         }
@@ -75,7 +75,7 @@ impl FrontMiddleBackQueue {
     #[allow(dead_code)]
     fn push_middle(&mut self, val: i32) {
         if self.left.len() > self.right.len() {
-            for x in self.left.pop_back() {
+            if let Some(x) = self.left.pop_back() {
                 self.right.push_front(x)
             }
         }
