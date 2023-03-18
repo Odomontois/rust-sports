@@ -36,7 +36,7 @@ where
 #[test]
 fn check() {
     assert_eq!(
-        dup_pref(["a", "a.b", "a.b.c", "c", "d.c"], |s| s.as_bytes()),
+        dup_pref(["aaaaa", "aaaaa.b", "aaaaa.b.c", "c", "d.c"], |s| s.as_bytes()),
         vec![(0, vec![1, 2])]
     );
 

@@ -13,3 +13,4 @@ mod add_binary;
 mod symmetric_tree;
 mod complete_binary_tree;
 mod build_tree_from_inorder_and_postorder;
+mod browser_history;
