@@ -1,4 +1,4 @@
-pub fn min_score(n: i32, mut roads: Vec<Vec<i32>>) -> i32 {
+pub fn min_score(n: i32, roads: Vec<Vec<i32>>) -> i32 {
     let mut uf = UnionFind::new(n as usize);
     for road in roads {
         let (x, y, dist) = (road[0] as usize, road[1] as usize, road[2]);
