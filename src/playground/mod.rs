@@ -8,3 +8,4 @@ mod count_integers_in_intervals;
 mod enum_unsidpatch;
 mod advent;
 mod duplicate_prefixes;
+mod match_drop;
