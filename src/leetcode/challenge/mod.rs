@@ -19,3 +19,4 @@ mod reorder_routes_to_make_all_paths;
 mod min_path_sum;
 mod min_cost_tickets;
 mod max_satisfaction;
+mod optimal_partition;
