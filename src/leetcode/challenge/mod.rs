@@ -20,3 +20,4 @@ mod min_path_sum;
 mod min_cost_tickets;
 mod max_satisfaction;
 mod optimal_partition;
+mod validate_stack_sequences;
