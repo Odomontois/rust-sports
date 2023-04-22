@@ -21,3 +21,5 @@ mod min_cost_tickets;
 mod max_satisfaction;
 mod optimal_partition;
 mod validate_stack_sequences;
+
+mod profitable_schemes;
