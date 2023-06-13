@@ -24,3 +24,4 @@ mod validate_stack_sequences;
 
 mod profitable_schemes;
 mod insertions_palindrome;
+mod snapshot_array;
