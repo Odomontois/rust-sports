@@ -25,3 +25,5 @@ mod validate_stack_sequences;
 mod profitable_schemes;
 mod insertions_palindrome;
 mod snapshot_array;
+mod equal_row_and_column;
+mod max_level_bin_tree;
