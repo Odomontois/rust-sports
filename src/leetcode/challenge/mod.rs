@@ -29,3 +29,4 @@ mod equal_row_and_column;
 mod max_level_bin_tree; 
 mod number_of_ways_to_reorder_array_to_get_same_bst;
 mod total_cost_to_hire_k_workers;
+mod find_k_pairs_with_smallest_sums;

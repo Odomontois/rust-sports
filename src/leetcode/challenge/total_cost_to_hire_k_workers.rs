@@ -3,8 +3,7 @@ use std::{cmp::Reverse, collections::BinaryHeap};
 pub fn total_cost(costs: Vec<i32>, k: i32, candidates: i32) -> i64 {
     let candidates = candidates as usize;
     let mut costs = costs.into_iter().enumerate().map(|(i, x)| Reverse((x, i)));
-    let mut heap = BinaryHeap::with_capacity(candidates * 2);
-    heap.extend(costs.by_ref().take(candidates).map(|x| (x, true)).collect());
+    let mut heap: BinaryHeap<_> = costs.by_ref().take(candidates).map(|x| (x, true)).collect();
     heap.extend(costs.by_ref().rev().map(|x| (x, false)).take(candidates));
 
     (0..k)
