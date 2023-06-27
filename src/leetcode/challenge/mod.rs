@@ -26,4 +26,6 @@ mod profitable_schemes;
 mod insertions_palindrome;
 mod snapshot_array;
 mod equal_row_and_column;
-mod max_level_bin_tree;
+mod max_level_bin_tree; 
+mod number_of_ways_to_reorder_array_to_get_same_bst;
+mod total_cost_to_hire_k_workers;
