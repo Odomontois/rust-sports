@@ -16,3 +16,4 @@ mod meeting_rooms3;
 mod online_stock_span;
 
 mod subarrays_with_median;
+mod contains_duplicate_iii;
