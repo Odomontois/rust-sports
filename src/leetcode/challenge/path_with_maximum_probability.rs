@@ -15,7 +15,7 @@ impl Ord for F64 {
 
 pub fn max_probability(n: i32, edges: Vec<Vec<i32>>, succ_prob: Vec<f64>, start: i32, end: i32) -> f64 {
     let (n, start, end) = (n as usize, start as usize, end as usize);
-    let mut adj = vec![(vec![]); n];
+    let mut adj = vec![vec![]; n];
     for (cost, edge) in succ_prob.into_iter().zip(edges) {
         let t: Result<[i32; 2], _> = edge.try_into();
         if let Ok(p) = t {

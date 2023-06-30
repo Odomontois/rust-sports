@@ -31,4 +31,5 @@ mod number_of_ways_to_reorder_array_to_get_same_bst;
 mod total_cost_to_hire_k_workers;
 mod find_k_pairs_with_smallest_sums;
 mod path_with_maximum_probability;
+mod shortest_path_to_get_all_keys;
 
