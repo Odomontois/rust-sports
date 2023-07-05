@@ -33,4 +33,5 @@ mod find_k_pairs_with_smallest_sums;
 mod path_with_maximum_probability;
 mod shortest_path_to_get_all_keys;
 mod buddy_strings;
+mod longest_subarray_of_1s_after_deleting_one_element;
 
