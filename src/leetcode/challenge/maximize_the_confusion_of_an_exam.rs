@@ -1,11 +1,8 @@
 use std::iter::from_fn;
 
 pub fn max_consecutive_answers<S: std::ops::Deref<Target = str>>(answer_key: S, k: i32) -> i32 {
-    let answers = answer_key.as_bytes();
-    solve(answers, &b'F', k)
-        .chain(solve(answers, &b'T', k))
-        .max()
-        .unwrap_or(0)
+    let run = |c| solve(answer_key.bytes(), c, k);
+    run(b'F').chain(run(b'T')).max().unwrap_or(0)
 }
 
 fn solve<'a, X: Eq + Copy + 'a>(
