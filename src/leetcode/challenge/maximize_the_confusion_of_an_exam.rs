@@ -1,5 +1,3 @@
-use std::iter::from_fn;
-
 pub fn max_consecutive_answers<S: std::ops::Deref<Target = str>>(answer_key: S, k: i32) -> i32 {
     let run = |c| solve(answer_key.bytes(), c, k);
     run(b'F').chain(run(b'T')).max().unwrap_or(0)
@@ -11,10 +9,8 @@ fn solve<'a, X: Eq + Copy + 'a>(
     mut lim: i32,
 ) -> impl Iterator<Item = i32> + 'a {
     let mut streak = 0;
-    let mut back = bs.clone().into_iter();
-    let mut front = bs.into_iter();
-    from_fn(move || {
-        let c = back.next()?;
+    let mut front = bs.clone().into_iter();
+    bs.into_iter().map(move |c| {
         streak += 1;
         if c != key {
             lim -= 1;
@@ -25,7 +21,7 @@ fn solve<'a, X: Eq + Copy + 'a>(
                 lim += 1
             }
         }
-        Some(streak)
+        streak
     })
 }
 

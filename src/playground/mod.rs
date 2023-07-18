@@ -11,3 +11,5 @@ mod duplicate_prefixes;
 mod match_drop;
 mod phantom_cov;
 mod dll;
+
+mod mem_align;
