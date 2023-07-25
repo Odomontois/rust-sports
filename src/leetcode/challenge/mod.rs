@@ -37,3 +37,4 @@ mod longest_subarray_of_1s_after_deleting_one_element;
 mod maximize_the_confusion_of_an_exam;
 mod lru_cache;
 mod non_overlapping_intervals;
+mod peak_index_in_a_mountain_array;
