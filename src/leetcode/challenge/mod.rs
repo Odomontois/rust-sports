@@ -38,3 +38,4 @@ mod maximize_the_confusion_of_an_exam;
 mod lru_cache;
 mod non_overlapping_intervals;
 mod peak_index_in_a_mountain_array;
+mod max_length_pair_chain;

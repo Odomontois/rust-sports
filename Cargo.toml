@@ -15,4 +15,4 @@ either = "1.6.1"
 enum_dispatch = "0.3.8"
 
 [workspace]
-members=["codejam", "codewars", "leetold", "data", "facebook"]
+members=["codejam", "codewars", "leetold", "data", "facebook", "euler"]
