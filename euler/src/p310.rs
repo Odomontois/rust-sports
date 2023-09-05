@@ -21,24 +21,21 @@ impl SquareNim {
         res
     }
 
-    fn counts(&self) -> Vec<usize> {
+    fn counts(&self) -> usize {
         let pc = self.pile_counts();
-        let mut res = vec![1];
-        for _ in 0..3 {
-            let mut next = Vec::new();
-            for (i, x) in pc.iter().enumerate() {
-                for (j, y) in res.iter().enumerate() {
-                    add(&mut next, i ^ j, x * y);
-                }
+        let mut double = Vec::new();
+        for (i, x) in pc.iter().enumerate() {
+            for (j, y) in pc.iter().enumerate() {
+                add(&mut double, i ^ j, x * y);
             }
-            res = next;
         }
-        res
+        pc.into_iter().enumerate().map(|(i, x)| x * double[i]).sum()
     }
 
+    #[allow(dead_code)]
     fn chpok(&self) -> usize {
         let pile = self.pile_counts()[0];
-        let tri = self.counts()[0];
+        let tri = self.counts();
         let triple = pile;
         let double = pile * self.size;
         let diff = tri - triple - double * 3;
@@ -53,20 +50,22 @@ fn add(v: &mut Vec<usize>, i: usize, d: usize) {
     v[i] += d;
 }
 
+#[cfg(test)]
 fn with_index<A>(v: Vec<A>) -> Vec<(usize, A)> {
     v.into_iter().enumerate().collect()
 }
 
 #[test]
 fn runn() {
-    let g = SquareNim { size: 29 };
+    let g = SquareNim { size: 100000 };
     println!(
-        "size = {},  {:?}\
+        "size = {}
         \nfor single pile {:?}\
-        \nres = {}",
+        \nall positions {}\
+        \nunique ordered positions = {}",
         g.size,
         with_index(g.pile_counts()),
-        with_index(g.counts()),
+        g.counts(),
         g.chpok()
     );
 }
