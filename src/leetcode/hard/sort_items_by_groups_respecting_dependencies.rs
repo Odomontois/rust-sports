@@ -4,7 +4,7 @@ struct Restrict {
     after: Vec<usize>,
 }
 
-pub fn sort_items<V: AsRef<[i32]>>(n: i32, m: i32, mut group: Vec<i32>, before_items: Vec<V>) -> Vec<i32> {
+pub fn sort_items<V: AsRef<[i32]>>(n: i32, m: i32, group: Vec<i32>, before_items: Vec<V>) -> Vec<i32> {
     let n = n as usize;
     let m = m as usize;
 

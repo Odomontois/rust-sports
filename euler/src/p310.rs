@@ -51,6 +51,7 @@ fn add(v: &mut Vec<usize>, i: usize, d: usize) {
 }
 
 #[cfg(test)]
+#[allow(dead_code)]
 fn with_index<A>(v: Vec<A>) -> Vec<(usize, A)> {
     v.into_iter().enumerate().collect()
 }

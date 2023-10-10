@@ -18,6 +18,7 @@ impl X {
 }
 
 #[test]
+#[allow(unused_variables)]
 fn main() -> Result<(), ()> {
     let a: Box<X> = Box::new(X::new()?);
     Ok(())
