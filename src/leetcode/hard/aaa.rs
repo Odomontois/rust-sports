@@ -9,5 +9,5 @@ trait Bar: Foo {
 }
 
 fn lol(bar: Rc<dyn Bar>) -> Rc<dyn Foo>{
-    bar
+    todo!()
 }

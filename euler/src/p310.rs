@@ -59,13 +59,9 @@ fn with_index<A>(v: Vec<A>) -> Vec<(usize, A)> {
 fn runn() {
     let g = SquareNim { size: 100000 };
     println!(
-        "size = {}
-        \nfor single pile {:?}\
-        \nall positions {}\
-        \nunique ordered positions = {}",
-        g.size,
-        with_index(g.pile_counts()),
-        g.counts(),
+
+        "unique ordered positions = {}",
+
         g.chpok()
     );
 }
