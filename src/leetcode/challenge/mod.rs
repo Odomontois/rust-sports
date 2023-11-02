@@ -40,3 +40,4 @@ mod non_overlapping_intervals;
 mod peak_index_in_a_mountain_array;
 mod max_length_pair_chain;
 mod min_cost_to_connect_all_points;
+mod average_in_subtree;

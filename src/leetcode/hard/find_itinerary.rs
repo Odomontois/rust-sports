@@ -1,5 +1,5 @@
 pub fn find_itinerary(mut tickets: Vec<Vec<String>>) -> Vec<String> {
-    use std::{convert::TryInto, collections::HashMap};
+    use std::collections::HashMap;
 
     let mut graph = HashMap::<String, Vec<String>>::new();
     tickets.sort_unstable_by(|v1, v2| v2.iter().cmp(v1.iter()));
