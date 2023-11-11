@@ -6,7 +6,7 @@ struct Graph {
 trait MyIndex: Index<usize, Output = i32> {}
 impl<A: Index<usize, Output = i32>> MyIndex for A {}
 impl Graph {
-    fn new<A: MyIndex>(n: i32, edges: Vec<A>) -> Self {
+    fn new<A: MyIndex>(n: i32, edges: impl IntoIterator<Item = A>) -> Self {
         let n = n as usize;
         let mut graph = Self {
             best: vec![vec![u32::MAX; n]; n],
@@ -64,7 +64,7 @@ impl Graph {
 
 #[test]
 fn example1() {
-    let mut g = Graph::new(4, vec![[0, 2, 5], [0, 1, 2], [1, 2, 1], [3, 0, 3]]);
+    let mut g = Graph::new(4, [[0, 2, 5], [0, 1, 2], [1, 2, 1], [3, 0, 3]]);
     assert_eq!(g.shortest_path(3, 2), 6);
     assert_eq!(g.shortest_path(0, 3), -1);
     g.add_edge([1, 3, 4]);
