@@ -4,15 +4,13 @@ fn ul(condition: bool) -> Result<(), Box<dyn Error>> {
     let mut file: File;
     let mut slice: &[u8];
 
-    let source: &mut dyn Read = if condition {
+    let _: &mut dyn Read = if condition {
         file = File::open("./path")?;
         &mut file
     } else {
         slice = &[72, 101, 108, 108, 111];
         &mut slice
     };
-
-    drop(source);
 
     Ok(())
 }

@@ -23,3 +23,4 @@ mod sort_items_by_groups_respecting_dependencies;
 mod aaa;
 mod find_itinerary;
 mod min_operations_make_continuous;
+mod graph_shortest_path;
