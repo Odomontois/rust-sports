@@ -1,18 +1,26 @@
 use std::{convert::Infallible, ops::Index};
 #[derive(Debug)]
 struct Graph {
-    best: Vec<Vec<u32>>,
+    n: usize,
+    best: Vec<u32>,
 }
-trait MyIndex: Index<usize, Output = i32> {}
-impl<A: Index<usize, Output = i32>> MyIndex for A {}
+trait Unpack {
+    fn unpack(self) -> (usize, usize, u32);
+}
+impl<A: Index<usize, Output = i32>> Unpack for A {
+    fn unpack(self) -> (usize, usize, u32) {
+        (self[0] as usize, self[1] as usize, self[2] as u32)
+    }
+}
 impl Graph {
-    fn new<A: MyIndex>(n: i32, edges: impl IntoIterator<Item = A>) -> Self {
+    fn new(n: i32, edges: impl IntoIterator<Item = impl Unpack>) -> Self {
         let n = n as usize;
         let mut graph = Self {
-            best: vec![vec![u32::MAX; n]; n],
+            n,
+            best: vec![u32::MAX; n * n],
         };
-        for (i, j, d) in edges.into_iter().map(Self::unpack_edge) {
-            graph.best[i][j] = d;
+        for (i, j, d) in edges.into_iter().map(<_>::unpack) {
+            graph.best[i * n + j] = d;
         }
         for k in 0..n {
             graph.check(k, k, 0);
@@ -20,8 +28,8 @@ impl Graph {
         graph
     }
 
-    fn add_edge<A: MyIndex>(&mut self, edge: A) {
-        let (i, j, d) = Self::unpack_edge(edge);
+    fn add_edge(&mut self, edge: impl Unpack) {
+        let (i, j, d) = edge.unpack();
         self.check(i, j, d);
     }
 
@@ -29,19 +37,16 @@ impl Graph {
         self.best_of(i as usize, j as usize).map_or(-1, |i| i as i32)
     }
     fn best_of(&self, i: usize, j: usize) -> Option<u32> {
-        let q = self.best[i][j];
+        let q = self.best[i * self.n + j];
         (q != u32::MAX).then(|| q)
-    }
-    fn unpack_edge(v: impl MyIndex) -> (usize, usize, u32) {
-        (v[0] as usize, v[1] as usize, v[2] as u32)
     }
 
     fn indices(&self) -> impl Iterator<Item = usize> + 'static {
-        0..self.best.len()
+        0..self.n
     }
 
     fn check_one(&mut self, i: usize, j: usize, d: u32) -> Option<()> {
-        let q = &mut self.best[i][j];
+        let q = &mut self.best[i * self.n + j];
         (*q > d).then(|| {
             *q = d;
         })
