@@ -8,17 +8,13 @@ pub fn image_smoother(mut img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
         let mut it = it.peekable();
         let mut prev = 0;
         while let Some((i, j)) = it.next() {
-            let v = vec[i][j];
-            vec[i][j] += prev;
-            prev = v;
+            (vec[i][j], prev) = (vec[i][j], vec[i][j] + prev);
             if let Some(&(i1, j1)) = it.peek() {
                 vec[i][j] += vec[i1][j1];
             }
         }
     }
 
-    (0..n).for_each(|i| {
-        (0..m).for_each(|j| img[i][j] /= dim(i, n) * dim(j, m));
-    });
+    (0..n).for_each(|i| (0..m).for_each(|j| img[i][j] /= dim(i, n) * dim(j, m)));
     img
 }

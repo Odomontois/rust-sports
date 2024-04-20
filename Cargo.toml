@@ -12,7 +12,8 @@ lazy_static = "1.4.0"
 itertools = "0.10.0"
 data = {path = "data"}
 either = "1.6.1"
-enum_dispatch = "0.3.8"
+enum_dispatch = "0.3.12"
+paste = "1.0.14"
 
 [workspace]
 members=["codejam", "codewars", "leetold", "data", "facebook", "euler"]

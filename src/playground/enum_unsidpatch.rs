@@ -29,6 +29,6 @@ enum AB {
 
 #[test]
 fn check() {
-    let ab = AB::A(A);
+    let ab : AB = A.into();
     println!("{}", ab.hello(&ab))
 }

@@ -18,3 +18,7 @@ mod all_possible_full_binary_trees;
 mod init;
 mod subs;
 mod forget_me;
+mod macro_tests;
+mod fn_inference;
+mod mops;
+mod pi;

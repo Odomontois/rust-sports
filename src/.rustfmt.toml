@@ -1,3 +1,4 @@
 fn_single_line = true
 max_width = 120
 overflow_delimited_expr = true
+struct_lit_width = 120
