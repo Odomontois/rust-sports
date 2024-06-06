@@ -22,3 +22,4 @@ mod macro_tests;
 mod fn_inference;
 mod mops;
 mod pi;
+mod simulas;
