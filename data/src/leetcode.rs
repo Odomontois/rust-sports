@@ -48,6 +48,7 @@ impl<'a> Iterator for ListIterMut<'a> {
 }
 
 use std::cell::RefCell;
+use std::fmt::Display;
 use std::rc::Rc;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -61,11 +62,7 @@ impl TreeNode {
     #[inline]
     #[allow(dead_code)]
     pub fn new(val: i32) -> Self {
-        TreeNode {
-            val,
-            left: None,
-            right: None,
-        }
+        TreeNode { val, left: None, right: None }
     }
 }
 
@@ -107,4 +104,23 @@ pub fn leaf(val: i32) -> Tree {
 #[test]
 fn tree_eq() {
     assert_eq!((1, 2, 3).tree(), (1, 2, 3).tree())
+}
+
+pub struct Displayed<'a>(pub &'a Tree);
+
+impl Display for Displayed<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        if let Displayed(Some(x)) = self {
+            write!(f, "{}", x.borrow())
+        } else {
+            write!(f, "*")
+        }
+    }
+}
+
+impl Display for TreeNode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let TreeNode { val, left, right } = self;
+        write!(f, "({val}, {}, {},)", Displayed(left), Displayed(right))
+    }
 }

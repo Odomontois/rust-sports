@@ -5,3 +5,4 @@ mod find_all_groups_of_farmland;
 mod hand_of_straights;
 mod replace_words;
 mod lcswadltoetl;
+mod bsttgst;
