@@ -6,3 +6,4 @@ mod hand_of_straights;
 mod replace_words;
 mod lcswadltoetl;
 mod bsttgst;
+mod balance_bin_tree;
