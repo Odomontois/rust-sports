@@ -23,3 +23,4 @@ mod twice_linear;
 mod n_linear;
 mod simple_assembler;
 // mod algebraic_isomorphism;
+mod binomial_expansion;

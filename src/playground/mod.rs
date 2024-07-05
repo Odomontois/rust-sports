@@ -23,3 +23,4 @@ mod fn_inference;
 mod mops;
 mod pi;
 mod simulas;
+mod coercible;
