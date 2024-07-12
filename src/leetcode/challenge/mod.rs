@@ -7,3 +7,4 @@ mod replace_words;
 mod lcswadltoetl;
 mod bsttgst;
 mod balance_bin_tree;
+mod max_score_removing_subs;

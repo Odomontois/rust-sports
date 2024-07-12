@@ -26,6 +26,7 @@ impl<'a> Coercible<'a, Foo> for Kek {
     }
 }
 
+#[allow(unused)]
 macro_rules! coerce {
     () => {};
 }

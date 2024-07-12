@@ -1,6 +1,6 @@
 use std::collections::hash_map::Entry;
 use std::collections::HashMap;
-use std::mem::{swap, take};
+use std::mem::swap;
 
 pub fn replace_words(dictionary: Vec<String>, sentence: String) -> String {
     let mut trie = Trie { prefix: "", end: false, children: HashMap::new() };
