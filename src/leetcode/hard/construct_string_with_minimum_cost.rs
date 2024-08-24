@@ -1,4 +1,4 @@
-use std::{collections::HashMap, iter::from_fn};
+use std::{cell::RefCell, collections::HashMap, iter::from_fn};
 
 pub fn minimum_cost<S: AsRef<str>>(target: impl AsRef<str>, words: impl AsRef<[S]>, costs: impl AsRef<[i32]>) -> i32 {
     let (target, words, costs) = (target.as_ref(), words.as_ref(), costs.as_ref());
@@ -6,6 +6,7 @@ pub fn minimum_cost<S: AsRef<str>>(target: impl AsRef<str>, words: impl AsRef<[S
     for (word, &cost) in words.iter().zip(costs) {
         trie.insert(word.as_ref(), cost);
     }
+    trie.fill_suffixes();
     let mut costs = vec![None; target.len() + 1];
     costs[0] = Some(0);
 
@@ -23,12 +24,13 @@ fn min_or<A: Ord>(x: &mut Option<A>, y: A) {
 }
 
 #[derive(Debug, Clone, Default)]
-struct Node {
-    children: HashMap<u8, Node>,
+struct Node<'a> {
+    children: HashMap<u8, Node<'a>>,
     cost: Option<i32>,
+    suffix: RefCell<Option<&'a Node<'a>>>,
 }
 
-impl Node {
+impl<'a> Node<'a> {
     fn insert(&mut self, word: &str, cost: i32) {
         let mut cur = self;
         for c in word.bytes() {
@@ -37,7 +39,7 @@ impl Node {
         min_or(&mut cur.cost, cost);
     }
 
-    fn walk<'a>(&'a self, prefix: &'a str) -> impl Iterator<Item = (usize, i32)> + 'a {
+    fn walk(&'a self, prefix: &'a str) -> impl Iterator<Item = (usize, i32)> + 'a {
         let mut cur = self;
         let mut i = 0;
         let mut prefix = prefix.bytes();
@@ -48,6 +50,8 @@ impl Node {
         })
         .flatten()
     }
+
+    fn fill_suffixes(&'a self) {}
 }
 
 #[test]

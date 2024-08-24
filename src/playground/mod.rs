@@ -24,3 +24,4 @@ mod mops;
 mod pi;
 mod simulas;
 mod coercible;
+mod streengs;

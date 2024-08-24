@@ -8,4 +8,7 @@ mod lcswadltoetl;
 mod bsttgst;
 mod balance_bin_tree;
 mod max_score_removing_subs;
-mod construct_string_with_minimum_cost;
+mod sort_array;
+mod count_number_of_teams;
+mod ugly_number_2;
+ьщв 
