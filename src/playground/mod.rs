@@ -25,3 +25,4 @@ mod pi;
 mod simulas;
 mod coercible;
 mod streengs;
+mod cloneable_dyn;

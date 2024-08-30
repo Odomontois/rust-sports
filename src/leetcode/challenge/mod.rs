@@ -11,4 +11,4 @@ mod max_score_removing_subs;
 mod sort_array;
 mod count_number_of_teams;
 mod ugly_number_2;
-ьщв 
+mod find_the_closest_palindrome;
