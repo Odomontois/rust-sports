@@ -1,11 +1,15 @@
 pub fn modified_graph_edges(n: i32, edges: Vec<Vec<i32>>, source: i32, destination: i32, target: i32) -> Vec<Vec<i32>> {
-    Search::new(n as usize, edges, source, destination, target)
+    Search::new(n as usize, edges, source, destination)
         .solve(target)
         .map(|edges| edges.into_iter().map(|(u, v, w)| vec![u as i32, v as i32, w]).collect())
         .unwrap_or_default()
 }
 
-use std::{cmp::Reverse, collections::BinaryHeap, i32};
+use std::{
+    cmp::Reverse,
+    collections::{BinaryHeap, HashSet},
+    i32,
+};
 
 struct Search {
     graph: Vec<Vec<(usize, i32, bool)>>,
@@ -15,12 +19,12 @@ struct Search {
 }
 
 impl Search {
-    pub fn new(n: usize, edges: Vec<Vec<i32>>, source: i32, destination: i32, target: i32) -> Self {
+    pub fn new(n: usize, edges: Vec<Vec<i32>>, source: i32, destination: i32) -> Self {
         let mut graph = vec![vec![]; n as usize];
         let mut blank = vec![];
         for edge in edges {
             match &edge[..] {
-                &[u, v, mut w] => {
+                &[u, v, w] => {
                     let (u, v) = (u as usize, v as usize);
                     let is_blank = w == -1;
                     graph[u].push((v, w, is_blank));
@@ -37,7 +41,7 @@ impl Search {
         Search { graph, source, destination, blank }
     }
 
-    fn shortest_path(&self) -> Option<(i64, Option<(usize, usize)>)> {
+    fn shortest_path(&self) -> Option<(i64, Vec<(usize, usize)>)> {
         let mut best = vec![None; self.graph.len()];
         let mut q = BinaryHeap::new();
         q.push((Reverse(0i64), self.source, None));
@@ -56,11 +60,11 @@ impl Search {
             }
         }
         let mut cur = self.destination;
-        let mut blank_mid = None;
+        let mut blank_mid = vec![];
         while cur != self.source {
             let (prev, is_blank) = best[cur]?.1?;
             if is_blank {
-                blank_mid = Some((prev, cur));
+                blank_mid.push((prev, cur));
             }
             cur = prev;
         }
@@ -77,7 +81,7 @@ impl Search {
 
     pub fn solve(&mut self, target: i32) -> Option<Vec<(usize, usize, i32)>> {
         self.set_blanks(target + 1);
-        
+
         let target = target as i64;
 
         if let Some((best, _)) = self.shortest_path() {
@@ -90,22 +94,29 @@ impl Search {
         }
         self.set_blanks(1);
 
-        loop {
-            let (best, blank_mid) = self.shortest_path()?;
-            if best > target {
-                return None;
-            } else if best == target {
-                return Some(self.collect_edges());
-            }
-            if let Some((u, v)) = blank_mid {
-                for &[[i, ip], [j, jp]] in &self.blank {
-                    if (i, j) == (u, v) || (i, j) == (v, u) {
-                        self.graph[i][ip].1 += (target - best) as i32;
-                        self.graph[j][jp].1 += (target - best) as i32;
-                    }
-                }
+        let (best, blank_mid) = self.shortest_path()?;
+        if best > target {
+            return None;
+        } else if best == target {
+            return Some(self.collect_edges());
+        }
+        let seen: HashSet<_> = blank_mid.into_iter().collect();
+        let (fu, fv) = seen.iter().next().copied()?;
+        for &[[i, ip], [j, jp]] in &self.blank {
+            let add = if !seen.contains(&(i, j)) && !seen.contains(&(j, i)) {
+                Some(target)
+            } else if (i, j) == (fu, fv) || (j, i) == (fu, fv) {
+                Some(target - best)
+            } else {
+                None
+            };
+            if let Some(add) = add {
+                self.graph[i][ip].1 += add as i32;
+                self.graph[j][jp].1 += add as i32;
             }
         }
+
+        Some(self.collect_edges())
     }
 
     fn collect_edges(&self) -> Vec<(usize, usize, i32)> {

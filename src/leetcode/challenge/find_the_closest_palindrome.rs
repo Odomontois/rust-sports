@@ -48,7 +48,7 @@ pub fn nearest_palindromic(n: String) -> String {
         .map(|(seq, less)| {
             (
                 seq.clone(),
-                if (less) {
+                if less {
                     minus(xstr.clone(), seq)
                 } else {
                     minus(seq, xstr.clone())
