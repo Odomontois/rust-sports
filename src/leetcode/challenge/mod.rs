@@ -13,3 +13,4 @@ mod count_number_of_teams;
 mod ugly_number_2;
 mod find_the_closest_palindrome;
 mod delete_node_present_from_linked;
+mod linked_list_in_binary_tree;

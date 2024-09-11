@@ -24,3 +24,4 @@ mod n_linear;
 mod simple_assembler;
 // mod algebraic_isomorphism;
 mod binomial_expansion;
+mod regular_expression_parser;
