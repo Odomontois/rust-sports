@@ -5,19 +5,19 @@ use std::{
 };
 
 pub fn find_x_sum(nums: Vec<i32>, k: i32, x: i32) -> Vec<i64> {
-    let mut nums_fwd = nums.iter().map(|&x| x as i64);
+    let mut nums_fwd = nums.iter().map(|&x| x);
     let nums_bck = nums_fwd.clone();
-    let calc = |Item { count, value }| count as i64 * value as i64;
-    let mut xsum = XSumData::new(x as usize);
+    let calc = |&Item { count, value }: &Item<i32>| count as i64 * value as i64;
+    let mut xsum = XSum::new(x as usize, calc);
     for num in nums_fwd.by_ref().take(k as usize - 1) {
-        xsum.change(num, 1, calc);
+        xsum.change(num, 1);
     }
     nums_fwd
         .zip(nums_bck)
         .map(|(add, remove)| {
-            xsum.change(add, 1, calc);
-            let res = xsum.top_sum;
-            xsum.change(remove, -1, calc);
+            xsum.change(add, 1);
+            let res = xsum.data.top_sum;
+            xsum.change(remove, -1);
             res
         })
         .collect()
@@ -34,46 +34,47 @@ struct XSumData<A, S> {
     bottom: BTreeSet<Item<A>>,
     frequency: HashMap<A, i32>,
     top_sum: S,
-    top_len: usize,
 }
 
 struct XSum<A, S, F> {
     data: XSumData<A, S>,
     calc: F,
+    top_len: usize,
 }
 
-impl<A: Default, S: Default, F> XSumD<A, S> {
-    fn new(top_len: usize) -> Self {
-        Self { top_len, ..Self::default() }
+impl<A: Default, S: Default, F: Fn(&Item<A>) -> S> XSum<A, S, F> {
+    fn new(top_len: usize, calc: F) -> Self {
+        Self { data: <_>::default(), top_len, calc }
     }
 }
 
-impl<A: Ord + Copy + Hash + Eq, S: AddAssign + SubAssign> XSumData<A, S> {
-    fn change(&mut self, value: A, dx: i32, calc: impl Fn(Item<A>) -> S) {
-        let freq = self.frequency.entry(value).or_insert(0);
+impl<A: Ord + Copy + Hash + Eq, S: AddAssign + SubAssign, F: Fn(&Item<A>) -> S> XSum<A, S, F> {
+    pub fn change(&mut self, value: A, dx: i32) {
+        let Self { data, calc, .. } = self;
+        let freq = data.frequency.entry(value).or_insert(0);
         let prev = Item { count: *freq, value };
-        if self.top.remove(&prev) {
-            self.top_sum -= calc(prev);
+        if data.top.remove(&prev) {
+            data.top_sum -= calc(&prev);
         } else {
-            self.bottom.remove(&prev);
+            data.bottom.remove(&prev);
         }
         *freq += dx;
         let new = Item { count: *freq, value };
-        if self.top.first().filter(|&top| top <= &new).is_some() {
-            self.top_sum += calc(new);
-            self.top.insert(new);
+        if data.top.first().filter(|&top| top <= &new).is_some() {
+            data.top_sum += calc(&new);
+            data.top.insert(new);
         } else {
-            self.bottom.insert(new);
+            data.bottom.insert(new);
         }
-        if self.top.len() > self.top_len {
-            if let Some(item) = self.top.pop_first() {
-                self.top_sum -= calc(item);
-                self.bottom.insert(item);
+        if data.top.len() > self.top_len {
+            if let Some(item) = data.top.pop_first() {
+                data.top_sum -= calc(&item);
+                data.bottom.insert(item);
             }
-        } else if self.top.len() < self.top_len {
-            if let Some(item) = self.bottom.pop_last() {
-                self.top_sum += calc(item);
-                self.top.insert(item);
+        } else if data.top.len() < self.top_len {
+            if let Some(item) = data.bottom.pop_last() {
+                data.top_sum += calc(&item);
+                data.top.insert(item);
             }
         }
     }
