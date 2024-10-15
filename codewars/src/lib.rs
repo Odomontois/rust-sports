@@ -25,3 +25,4 @@ mod simple_assembler;
 // mod algebraic_isomorphism;
 mod binomial_expansion;
 mod regular_expression_parser;
+mod power_tower_podulo;
