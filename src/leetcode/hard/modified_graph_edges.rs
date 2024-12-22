@@ -166,7 +166,6 @@ fn example1() {
 fn example2() {
     check(3, &[[0, 1, -1], [0, 2, 5]], 0, 2, 6, &[])
 }
-
 #[test]
 fn example3() {
     check(

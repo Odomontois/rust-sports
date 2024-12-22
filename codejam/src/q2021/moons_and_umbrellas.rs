@@ -32,6 +32,7 @@ enum CJQ {
 }
 use CJQ::*;
 fn tests(stdin: &Stdin) -> impl Iterator<Item = (i32, i32, Vec<CJQ>)> + '_ {
+    std::file!()
     let mut reader = stdin.lock().lines().map(Result::unwrap);
     let count: u32 = reader.next().unwrap().parse().unwrap();
     (0..count).filter_map(move |_| {
