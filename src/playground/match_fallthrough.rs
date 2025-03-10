@@ -1,3 +1,4 @@
+#[allow(unused)]
 fn original() {
     let [mut k1, c1, c2, mut h1, len] = [0; 5];
     let tail = [0; 3];
