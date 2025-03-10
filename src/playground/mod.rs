@@ -26,3 +26,4 @@ mod simulas;
 mod coercible;
 mod streengs;
 mod cloneable_dyn;
+mod match_fallthrough;
