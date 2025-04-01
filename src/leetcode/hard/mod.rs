@@ -10,3 +10,4 @@ mod trapping_rain_water_2;
 mod shortest_common_supersequence;
 mod minimum_and_walk;
 mod points_grid_queries;
+mod prime_score;
