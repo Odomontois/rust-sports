@@ -17,3 +17,5 @@ mod linked_list_in_binary_tree;
 mod longest_square_streak;
 mod construct_valid_sequence;
 mod substrings_of_k_consonants;
+mod modulo_k_subarrays;
+mod balanced_permutations;
