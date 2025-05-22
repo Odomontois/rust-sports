@@ -19,3 +19,5 @@ mod construct_valid_sequence;
 mod substrings_of_k_consonants;
 mod modulo_k_subarrays;
 mod balanced_permutations;
+
+mod zero_array_trans_3;
