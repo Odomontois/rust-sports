@@ -6,6 +6,7 @@ enum Foo{
 }
 
 #[test]
+#[allow(unused)]
 fn main() {
     let mut foo = Foo::Bar(1);
     match foo {

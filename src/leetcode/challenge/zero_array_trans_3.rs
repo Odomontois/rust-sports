@@ -9,7 +9,7 @@ pub fn max_removal(nums: Vec<i32>, queries: Vec<impl std::ops::Index<usize, Outp
     let mut res = queries.len() as i32;
     for (i, x) in nums.into_iter().enumerate() {
         let i = i as i32;
-        while e.peek().filter(|&&x| -x == i).is_some() {
+        while e.peek().filter(|&x| -x == i).is_some() {
             cur -= 1;
             e.pop();
         }

@@ -12,3 +12,4 @@ mod minimum_and_walk;
 mod points_grid_queries;
 mod prime_score;
 mod powerful_integers;
+mod minimum_cost_teleportations;

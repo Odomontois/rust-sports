@@ -39,7 +39,7 @@ impl<K: Eq + Hash, V> IndexMut<K> for Mop<K, V> {
 #[cfg(test)]
 #[allow(mutable_transmutes)]
 unsafe fn japa<A: Sized>(x: &A) -> &mut A {
-    std::mem::transmute(x)
+    unsafe { std::mem::transmute(x) }
 }
 
 #[test]

@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(mismatched_lifetime_syntaxes)]
 
 
 mod which_are_in;

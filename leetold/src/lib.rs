@@ -1,4 +1,5 @@
 #![allow(dead_code)]
+#![allow(mismatched_lifetime_syntaxes)]
 #[macro_use]
 extern crate lazy_static;
 
